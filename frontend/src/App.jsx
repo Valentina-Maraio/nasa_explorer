@@ -1,30 +1,36 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
+import ApodPage from './pages/ApodPage';
+import HomePage from './pages/HomePage';
+import NasaMediaPage from './pages/NasaMediaPage';
+import './App.css';
 
 function App() {
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <ErrorBoundary>
+      <Router>
+        <div className="app-container">
+          <nav className="navbar">
+            <div className="navbar-content">
+              <h1 className="glow-text"><Link to="/" className="homepage_button">◈ NASA EXPLORER ◈</Link></h1>
+              <ul className="nav-links">
+                <li><Link to="/apod">APOD</Link></li>
+                <li><Link to="/nasa-media">NASA MEDIA</Link></li>
+              </ul>
+            </div>
+          </nav>
+
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/apod" element={<ApodPage />} />
+              <Route path="/nasa-media" element={<NasaMediaPage />} />
+            </Routes>
+          </main>
         </div>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </Router>
+    </ErrorBoundary>
+  );
 }
 
-export default App
+export default App;
