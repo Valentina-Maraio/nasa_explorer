@@ -1,24 +1,19 @@
-export function LoadingState({ 
-  message = '▸ LOADING...', 
+import { memo } from 'react';
+import styles from './styles/LoadingState.module.css';
+
+export const LoadingState = memo(function LoadingState({
+  message = '▸ LOADING...',
   minHeight = '200px',
-  className = ''
+  className = '',
 }) {
   return (
     <div
-      className={`loading ${className}`}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight,
-        color: 'rgba(0, 255, 159, 0.7)',
-        fontSize: '1rem',
-        fontStyle: 'italic',
-      }}
+      className={`loading ${styles.loading} ${className}`}
+      style={{ '--loading-min-height': minHeight }}
     >
       {message}
     </div>
   );
-}
+});
 
 export default LoadingState;

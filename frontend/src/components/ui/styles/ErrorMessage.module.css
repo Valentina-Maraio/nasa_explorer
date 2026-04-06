@@ -1,0 +1,26 @@
+.errorBox {
+  padding: 15px;
+  margin-bottom: 20px;
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 2px;
+  color: #ff6b6b;
+}
+
+.errorText {
+  margin-bottom: 0;
+}
+
+.errorTextWithRetry {
+  margin-bottom: 10px;
+}
+
+.retryButton {
+  padding: 8px 12px;
+  background: rgba(255, 100, 100, 0.2);
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  color: #ff6b6b;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 0.9rem;
+}

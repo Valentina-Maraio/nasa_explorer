@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { useImageSearch } from '../hooks/useImageSearch';
 import { SkeletonLoader } from '../components/ui/SkeletonLoader';
 import { ErrorMessage } from '../components/ui/ErrorMessage';
@@ -6,12 +6,33 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { LoadingState } from '../components/ui/LoadingState';
 import { Pagination } from '../components/ui/Pagination';
-import robotMakingVideo from '../assets/robot_making_video.png';
+import styles from './styles/NasaMediaPage.module.css';
+
+function SixSquareLoader({ label = 'Loading preview' }) {
+  return (
+    <div className={styles.loaderFrame} aria-label={label} role="status">
+      <div className={styles.loaderGrid}>
+        <span className={styles.loaderSquare} />
+        <span className={styles.loaderSquare} />
+        <span className={styles.loaderSquare} />
+        <span className={styles.loaderSquare} />
+        <span className={styles.loaderSquare} />
+        <span className={styles.loaderSquare} />
+      </div>
+    </div>
+  );
+}
 
 function NasaMediaPage() {
   const mobileSelectedPanelRef = useRef(null);
+  const mobileQueryRef = useRef(null);
   const [mobileReadyIdentity, setMobileReadyIdentity] = useState('');
   const [desktopReadyIdentity, setDesktopReadyIdentity] = useState('');
+  const [desktopImageReadyIdentity, setDesktopImageReadyIdentity] = useState('');
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [isPaginating, setIsPaginating] = useState(false);
+  const [isDesktopPreviewOpen, setIsDesktopPreviewOpen] = useState(false);
+  const [desktopPreviewMode, setDesktopPreviewMode] = useState(null);
 
   const {
     query,
@@ -30,101 +51,213 @@ function NasaMediaPage() {
     handlePageChange,
   } = useImageSearch('moon');
 
-  const handleRetry = () => {
-    searchMedia(query);
-  };
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+    mobileQueryRef.current = mediaQuery;
+    setIsMobileViewport(mediaQuery.matches);
 
-  const selectedItem = results.find((item) => item.nasa_id === selectedAsset);
-  const embeddedMp4 = assetFiles.find((file) => /\.mp4($|\?)/i.test(file.href));
-  const videoIdentity = embeddedMp4 ? `${selectedAsset}-${embeddedMp4.href}` : '';
+    const handleMediaChange = (event) => {
+      setIsMobileViewport(event.matches);
+    };
 
-  const isMobileViewport = () => window.matchMedia('(max-width: 1000px)').matches;
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleMediaChange);
+      return () => mediaQuery.removeEventListener('change', handleMediaChange);
+    }
 
-  const handleSelectAsset = (nasaId) => {
+    mediaQuery.addListener(handleMediaChange);
+    return () => mediaQuery.removeListener(handleMediaChange);
+  }, []);
+
+  const handleRetry = useCallback(() => {
+    searchMedia(query, currentPage);
+  }, [searchMedia, query, currentPage]);
+
+  const selectedItem = useMemo(
+    () => results.find((item) => item.nasa_id === selectedAsset),
+    [results, selectedAsset],
+  );
+
+  const previewImageFile = useMemo(() => {
+    const imageFiles = assetFiles.filter((file) => /\.(jpe?g|png|webp|gif)($|\?)/i.test(file.href));
+    return imageFiles.find((file) => !/~thumb/i.test(file.href)) || imageFiles[0] || null;
+  }, [assetFiles]);
+
+  const previewImageHref = useMemo(
+    () => previewImageFile?.href || selectedItem?.thumbnail || '',
+    [previewImageFile, selectedItem],
+  );
+
+  const desktopPreviewImageHref = useMemo(
+    () => previewImageFile?.href || '',
+    [previewImageFile],
+  );
+
+  const embeddedMp4 = useMemo(
+    () => assetFiles.find((file) => /\.mp4($|\?)/i.test(file.href)),
+    [assetFiles],
+  );
+  const videoIdentity = useMemo(
+    () => (embeddedMp4 ? `${selectedAsset}-${embeddedMp4.href}` : ''),
+    [embeddedMp4, selectedAsset],
+  );
+
+  const imageIdentity = useMemo(
+    () => (previewImageHref ? `${selectedAsset}-${previewImageHref}` : ''),
+    [selectedAsset, previewImageHref],
+  );
+
+  const desktopImageIdentity = useMemo(
+    () => (desktopPreviewImageHref ? `${selectedAsset}-${desktopPreviewImageHref}` : ''),
+    [selectedAsset, desktopPreviewImageHref],
+  );
+
+  const closeDesktopPreview = useCallback(() => {
+    setIsDesktopPreviewOpen(false);
+    setDesktopPreviewMode(null);
+  }, []);
+
+  useEffect(() => {
+    if (isMobileViewport) {
+      closeDesktopPreview();
+      return;
+    }
+
+    if (!isDesktopPreviewOpen) {
+      return;
+    }
+
+    if (selectedAsset && embeddedMp4) {
+      setDesktopPreviewMode('video');
+      return;
+    }
+
+    if (selectedAsset && desktopPreviewImageHref) {
+      setDesktopPreviewMode('image');
+      return;
+    }
+
+    if (selectedAsset) {
+      setDesktopPreviewMode('loading');
+      return;
+    }
+
+    setDesktopPreviewMode(null);
+  }, [closeDesktopPreview, desktopPreviewImageHref, embeddedMp4, isDesktopPreviewOpen, isMobileViewport, selectedAsset]);
+
+  useEffect(() => {
+    if (!isDesktopPreviewOpen) {
+      return undefined;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setDesktopPreviewMode(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isDesktopPreviewOpen]);
+
+  const handleSelectAsset = useCallback((nasaId) => {
+    setDesktopReadyIdentity('');
+    setDesktopImageReadyIdentity('');
+
+    if (!isMobileViewport) {
+      setIsDesktopPreviewOpen(true);
+      setDesktopPreviewMode('loading');
+    }
+
     loadAsset(nasaId);
 
-    if (isMobileViewport() && mobileSelectedPanelRef.current) {
+    if (isMobileViewport && mobileSelectedPanelRef.current) {
       requestAnimationFrame(() => {
         mobileSelectedPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     }
-  };
+  }, [isMobileViewport, loadAsset]);
+
+  const handleGalleryItemClick = useCallback((event) => {
+    const { nasaId } = event.currentTarget.dataset;
+    if (!nasaId) {
+      return;
+    }
+    handleSelectAsset(nasaId);
+  }, [handleSelectAsset]);
+
+  const handlePaginationWithSpinner = useCallback((page) => {
+    setIsPaginating(true);
+    handlePageChange(page);
+  }, [handlePageChange]);
+
+  useEffect(() => {
+    if (!loading) {
+      setIsPaginating(false);
+    }
+  }, [loading]);
 
   return (
-    <div>
+    <div className={styles.page}>
       <h2 className="panel-title text-4xl mb-8">♠ NASA IMAGE & VIDEO LIBRARY</h2>
 
-      <div className="dashboard-grid">
-        {/* main panel */}
-        <div className="large-panel">
-          <Card>
-            <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-              <div className="form-field">
-                <label className="form-field label">SEARCH QUERY</label>
-                <input
-                  type="text"
-                  value={query}
-                  onChange={handleQueryChange}
-                  placeholder="e.g. Apollo, Saturn, Mars, Nebula"
-                />
-              </div>
-              <Button type="submit">
-                {loading ? '▸ SCANNING NASA ARCHIVES...' : '▶ EXECUTE SEARCH'}
-              </Button>
-            </form>
-
+      <div className={styles.mediaDashboardGrid}>
+        <div className={styles.mediaMainPanel}>
+          <Card className={styles.mediaMainCard}>
             {error && <ErrorMessage message={error} onRetry={handleRetry} />}
 
-            {loading && <SkeletonLoader count={4} height={250} />}
+            {loading && !isPaginating && <SkeletonLoader count={4} height={250} />}
 
-            {!loading && results.length > 0 && (
+            {results.length > 0 && (!loading || isPaginating) && (
               <div>
-                <h3 className="panel-title" style={{ marginBottom: '20px' }}>
+                <h3 className={`panel-title ${styles.resultsTitle}`}>
                   ▸ {totalResults} RESULTS FOUND
                 </h3>
 
-                <div ref={mobileSelectedPanelRef} className="nasa-mobile-selected-panel">
+                <div className={styles.mobileSearchPanel}>
+                  <Card>
+                    <h3 className="panel-title">SEARCH QUERY</h3>
+                    <form onSubmit={handleSubmit} className={styles.searchForm}>
+                      <div className={`form-field ${styles.formFieldSpacing}`}>
+                        <label className="form-field label">ENTER KEYWORDS</label>
+                        <input
+                          type="text"
+                          value={query}
+                          onChange={handleQueryChange}
+                          placeholder="e.g. Apollo, Saturn, Mars, Nebula"
+                        />
+                      </div>
+                      <Button type="submit">
+                        ▶ EXECUTE SEARCH
+                      </Button>
+                    </form>
+                  </Card>
+                </div>
+
+                <div ref={mobileSelectedPanelRef} className={styles.mobileSelectedPanel}>
                   <Card>
                     <h3 className="panel-title">SELECTED MEDIA</h3>
 
                     {!selectedAsset && (
-                      <div style={{ marginTop: '15px', color: 'rgba(0,255,159,0.6)' }}>
+                      <div className={styles.mutedHint}>
                         ▸ Tap a gallery item to view specs and video preview
                       </div>
                     )}
 
                     {selectedAsset && (
-                      <div style={{ marginTop: '15px' }}>
-                        <div style={{ color: '#00ffff', fontWeight: 'bold', marginBottom: '10px' }}>
+                      <div className={styles.selectedAssetContent}>
+                        <div className={styles.assetIdText}>
                           NASA ID: {selectedAsset}
                         </div>
 
-                        <div style={{ fontSize: '0.9rem', color: 'rgba(0,255,159,0.8)', marginBottom: '12px' }}>
+                        <div className={styles.assetTitleText}>
                           {selectedItem?.title || 'Untitled'}
                         </div>
 
-                        <div style={{ maxHeight: '160px', overflowY: 'auto', fontSize: '0.85rem' }}>
-                          {assetFiles.slice(0, 6).map((file, idx) => (
-                            <div key={idx} style={{ marginBottom: '8px', color: 'rgba(0,255,159,0.7)' }}>
-                              <a href={file.href} target="_blank" rel="noreferrer" style={{ color: '#00ffff' }}>
-                                {file.href.split('/').pop()}
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-
                         {embeddedMp4 ? (
-                          <div style={{ position: 'relative', marginTop: '12px' }}>
+                          <div className={styles.mediaPreviewWrap}>
                             {mobileReadyIdentity !== videoIdentity && (
-                              <img
-                                src={robotMakingVideo}
-                                alt="Video loading"
-                                style={{
-                                  width: '100%',
-                                  border: '1px solid rgba(0, 255, 159, 0.3)',
-                                  borderRadius: '2px',
-                                }}
-                              />
+                              <SixSquareLoader label="Loading video preview" />
                             )}
 
                             <video
@@ -132,21 +265,16 @@ function NasaMediaPage() {
                               controls
                               preload="metadata"
                               onLoadedData={() => setMobileReadyIdentity(videoIdentity)}
-                              style={{
-                                width: '100%',
-                                border: '1px solid rgba(0, 255, 159, 0.3)',
-                                borderRadius: '2px',
-                                display: 'block',
-                                opacity: mobileReadyIdentity === videoIdentity ? 1 : 0,
-                                transition: 'opacity 0.25s ease',
-                              }}
+                              className={`${styles.mediaElement} ${
+                                mobileReadyIdentity === videoIdentity ? styles.mediaVisible : ''
+                              }`}
                             >
                               <source src={embeddedMp4.href} type="video/mp4" />
                               Your browser does not support the video tag.
                             </video>
                           </div>
                         ) : (
-                          <div style={{ marginTop: '12px', color: 'rgba(0,255,159,0.6)', fontSize: '0.85rem' }}>
+                          <div className={styles.noEmbedMessage}>
                             ▸ No embeddable MP4 found for this item.
                           </div>
                         )}
@@ -155,43 +283,42 @@ function NasaMediaPage() {
                   </Card>
                 </div>
 
-                <div className="gallery-grid">
-                  {results.map((item) => (
-                    <div
-                      key={item.nasa_id}
-                      className="gallery-item"
-                      onClick={() => handleSelectAsset(item.nasa_id)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {item.thumbnail && <img src={item.thumbnail} alt={item.title} />}
-                      <div className="gallery-item-info">
+                {loading && isPaginating ? (
+                  <div className={styles.galleryLoadingState} role="status" aria-live="polite" aria-label="Loading next page">
+                    <div className={styles.gallerySpinner} aria-hidden="true" />
+                  </div>
+                ) : (
+                  <>
+                    <div className={styles.galleryGrid}>
+                      {results.map((item) => (
                         <div
-                          style={{
-                            color: '#00ffff',
-                            fontWeight: 'bold',
-                            marginBottom: '5px',
-                          }}
+                          key={item.nasa_id}
+                          className={styles.galleryItem}
+                          data-nasa-id={item.nasa_id}
+                          onClick={handleGalleryItemClick}
+                          role="button"
+                          tabIndex={0}
                         >
-                          {item.title}
+                          {item.thumbnail && <img src={item.thumbnail} alt={item.title} loading="lazy" />}
+                          <div className={styles.galleryItemInfo}>
+                            <div className={styles.galleryItemTitle}>
+                              {item.title}
+                            </div>
+                            <div className={styles.galleryItemMeta}>
+                              {item.center} — {item.media_type.toUpperCase()}
+                            </div>
+                          </div>
                         </div>
-                        <div
-                          style={{
-                            fontSize: '0.8rem',
-                            color: 'rgba(0, 255, 159, 0.7)',
-                          }}
-                        >
-                          {item.center} — {item.media_type.toUpperCase()}
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onPageChange={handlePaginationWithSpinner}
+                    />
+                  </>
+                )}
               </div>
             )}
 
@@ -201,76 +328,85 @@ function NasaMediaPage() {
           </Card>
         </div>
 
-        {/* side panel */}
-        <div className="side-panel nasa-media-side-panel">
-          <Card>
+        <aside className={styles.mediaSidePanel}>
+          <Card className={styles.mediaSidePanelCard}>
+            <h3 className="panel-title">SEARCH QUERY</h3>
+            <form onSubmit={handleSubmit} className={styles.searchForm}>
+              <div className={`form-field ${styles.formFieldSpacing}`}>
+                <label className="form-field label">ENTER KEYWORDS</label>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={handleQueryChange}
+                  placeholder="e.g. Apollo, Saturn, Mars, Nebula"
+                />
+              </div>
+              <Button type="submit">
+                ▶ EXECUTE SEARCH
+              </Button>
+            </form>
+          </Card>
+
+          <Card className={styles.mediaSidePanelCard}>
             <h3 className="panel-title">ASSET DETAILS</h3>
 
             {!selectedAsset && (
-              <div style={{ marginTop: '15px', color: 'rgba(0,255,159,0.6)' }}>
+              <div className={styles.mutedHint}>
                 ▸ Select an item from the gallery to view details
               </div>
             )}
 
             {selectedAsset && (
-              <div style={{ marginTop: '15px' }}>
-                <div
-                  style={{
-                    color: '#00ffff',
-                    fontWeight: 'bold',
-                    marginBottom: '10px',
-                  }}
-                >
+              <div className={styles.selectedAssetContent}>
+                <div className={styles.assetIdText}>
                   NASA ID: {selectedAsset}
                 </div>
 
-                <div
-                  style={{
-                    maxHeight: '200px',
-                    overflowY: 'auto',
-                    fontSize: '0.85rem',
-                  }}
-                >
+                <div className={styles.detailsScroll}>
                 </div>
               </div>
             )}
           </Card>
+        </aside>
+      </div>
 
-          <Card>
-            <h3 className="panel-title">VIDEO PLAYER</h3>
+      {!isMobileViewport && isDesktopPreviewOpen && desktopPreviewMode && (
+        <div
+          className={styles.videoDialogOverlay}
+          role="presentation"
+          onClick={closeDesktopPreview}
+        >
+          <div
+            className={styles.videoDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-label="NASA media preview"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.videoDialogHeader}>
+              <h3 className="panel-title">{desktopPreviewMode === 'video' ? 'VIDEO PLAYER' : 'IMAGE PREVIEW'}</h3>
+              <button
+                type="button"
+                className={styles.videoDialogClose}
+                onClick={closeDesktopPreview}
+              >
+                ✕
+              </button>
+            </div>
 
-            {!selectedAsset && (
-              <div style={{ marginTop: '15px', color: 'rgba(0,255,159,0.6)' }}>
-                ▸ Select a gallery item to preview video when an MP4 file exists
-              </div>
+            <div className={styles.dialogAssetTitle}>
+              {selectedItem?.title || selectedAsset}
+            </div>
+
+            {desktopPreviewMode === 'loading' && (
+              <SixSquareLoader label="Loading media preview" />
             )}
 
-            {selectedAsset && !embeddedMp4 && (
-              <div style={{ marginTop: '15px', color: 'rgba(0,255,159,0.7)' }}>
-                ▸ No embeddable MP4 found for this asset.
-                <div style={{ marginTop: '8px', fontSize: '0.85rem', color: 'rgba(0,255,159,0.55)' }}>
-                  Try another result with media type VIDEO.
-                </div>
-              </div>
-            )}
-
-            {selectedAsset && embeddedMp4 && (
-              <div style={{ marginTop: '15px' }}>
-                <div style={{ marginBottom: '10px', color: '#00ffff', fontWeight: 'bold' }}>
-                  {selectedItem?.title || selectedAsset}
-                </div>
-
-                <div style={{ position: 'relative' }}>
+            {desktopPreviewMode === 'video' && embeddedMp4 && (
+              <>
+                <div className={styles.mediaPreviewOverlayWrap}>
                   {desktopReadyIdentity !== videoIdentity && (
-                    <img
-                      src={robotMakingVideo}
-                      alt="Video loading"
-                      style={{
-                        width: '100%',
-                        border: '1px solid rgba(0, 255, 159, 0.3)',
-                        borderRadius: '2px',
-                      }}
-                    />
+                    <SixSquareLoader label="Loading video preview" />
                   )}
 
                   <video
@@ -278,14 +414,9 @@ function NasaMediaPage() {
                     controls
                     preload="metadata"
                     onLoadedData={() => setDesktopReadyIdentity(videoIdentity)}
-                    style={{
-                      width: '100%',
-                      border: '1px solid rgba(0, 255, 159, 0.3)',
-                      borderRadius: '2px',
-                      display: 'block',
-                      opacity: desktopReadyIdentity === videoIdentity ? 1 : 0,
-                      transition: 'opacity 0.25s ease',
-                    }}
+                    className={`${styles.mediaElement} ${
+                      desktopReadyIdentity === videoIdentity ? styles.mediaVisible : ''
+                    }`}
                   >
                     <source src={embeddedMp4.href} type="video/mp4" />
                     Your browser does not support the video tag.
@@ -296,20 +427,44 @@ function NasaMediaPage() {
                   href={embeddedMp4.href}
                   target="_blank"
                   rel="noreferrer"
-                  style={{
-                    display: 'inline-block',
-                    marginTop: '10px',
-                    color: '#00ffff',
-                    fontSize: '0.85rem',
-                  }}
+                  className={styles.previewLink}
                 >
                   ▶ Open MP4 in new tab
                 </a>
-              </div>
+              </>
             )}
-          </Card>
+
+            {desktopPreviewMode === 'image' && desktopPreviewImageHref && (
+              <>
+                <div className={styles.mediaPreviewOverlayWrap}>
+                  {desktopImageReadyIdentity !== desktopImageIdentity && (
+                    <SixSquareLoader label="Loading image preview" />
+                  )}
+
+                  <img
+                    key={desktopImageIdentity}
+                    src={desktopPreviewImageHref}
+                    alt={selectedItem?.title || selectedAsset || 'NASA media preview'}
+                    onLoad={() => setDesktopImageReadyIdentity(desktopImageIdentity)}
+                    className={`${styles.imageElement} ${
+                      desktopImageReadyIdentity === desktopImageIdentity ? styles.mediaVisible : ''
+                    }`}
+                  />
+                </div>
+
+                <a
+                  href={desktopPreviewImageHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.previewLink}
+                >
+                  ▶ Open image in new tab
+                </a>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

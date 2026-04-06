@@ -1,7 +1,10 @@
-export function Pagination({ currentPage, totalPages, onPageChange }) {
+import { memo, useMemo, useCallback } from 'react';
+import styles from './styles/Pagination.module.css';
+
+export const Pagination = memo(function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
-  const getPageNumbers = () => {
+  const pageNumbers = useMemo(() => {
     const pages = [];
     const maxVisiblePages = 5;
 
@@ -29,32 +32,30 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
     }
 
     return pages;
-  };
+  }, [currentPage, totalPages]);
 
-  const pageNumbers = getPageNumbers();
+  const handlePrevClick = useCallback(() => {
+    onPageChange(currentPage - 1);
+  }, [onPageChange, currentPage]);
+
+  const handleNextClick = useCallback(() => {
+    onPageChange(currentPage + 1);
+  }, [onPageChange, currentPage]);
+
+  const handlePageClick = useCallback((event) => {
+    const { page } = event.currentTarget.dataset;
+    if (!page) {
+      return;
+    }
+    onPageChange(Number(page));
+  }, [onPageChange]);
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: '8px',
-      marginTop: '20px',
-      flexWrap: 'wrap'
-    }}>
+    <div className={styles.container}>
       <button
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={handlePrevClick}
         disabled={currentPage === 1}
-        style={{
-          padding: '8px 12px',
-          background: 'rgba(0, 255, 159, 0.1)',
-          border: '1px solid rgba(0, 255, 159, 0.3)',
-          color: currentPage === 1 ? 'rgba(0, 255, 159, 0.3)' : '#00ff9f',
-          cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-          borderRadius: '4px',
-          fontSize: '0.9rem',
-          minWidth: '80px'
-        }}
+        className={`${styles.button} ${styles.navButton}`}
       >
         ◀ PREV
       </button>
@@ -62,40 +63,24 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
       {pageNumbers.map((page, index) => (
         <button
           key={index}
-          onClick={() => typeof page === 'number' && onPageChange(page)}
+          data-page={typeof page === 'number' ? page : undefined}
+          onClick={handlePageClick}
           disabled={page === '...'}
-          style={{
-            padding: '8px 12px',
-            background: page === currentPage ? 'rgba(0, 255, 159, 0.2)' : 'rgba(0, 255, 159, 0.1)',
-            border: page === currentPage ? '1px solid #00ff9f' : '1px solid rgba(0, 255, 159, 0.3)',
-            color: page === currentPage ? '#00ff9f' : 'rgba(0, 255, 159, 0.7)',
-            cursor: page === '...' ? 'default' : 'pointer',
-            borderRadius: '4px',
-            fontSize: '0.9rem',
-            minWidth: '40px',
-            fontWeight: page === currentPage ? 'bold' : 'normal'
-          }}
+          className={`${styles.button} ${styles.pageButton} ${
+            page === currentPage ? styles.activePage : ''
+          } ${page === '...' ? styles.ellipsis : ''}`}
         >
           {page}
         </button>
       ))}
 
       <button
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={handleNextClick}
         disabled={currentPage === totalPages}
-        style={{
-          padding: '8px 12px',
-          background: 'rgba(0, 255, 159, 0.1)',
-          border: '1px solid rgba(0, 255, 159, 0.3)',
-          color: currentPage === totalPages ? 'rgba(0, 255, 159, 0.3)' : '#00ff9f',
-          cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-          borderRadius: '4px',
-          fontSize: '0.9rem',
-          minWidth: '80px'
-        }}
+        className={`${styles.button} ${styles.navButton}`}
       >
         NEXT ▶
       </button>
     </div>
   );
-}
+});

@@ -3,9 +3,10 @@ import { normaliseApodData } from '../utils/normalise';
 import { buildApiUrl } from '../utils/apiUrl';
 import { cacheGet, cacheSet, cacheKey, TTL } from '../utils/cache';
 
-export function useApod(initialDate = '') {
+export function useApod(initialDate = '', options = {}) {
+  const { autoFetch = true } = options;
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(autoFetch);
   const [error, setError] = useState(null);
 
   const fetchApod = useCallback(async (date = '') => {
@@ -45,8 +46,11 @@ export function useApod(initialDate = '') {
   }, [fetchApod, initialDate]);
 
   useEffect(() => {
+    if (!autoFetch) {
+      return;
+    }
     fetchApod(initialDate);
-  }, [fetchApod, initialDate]);
+  }, [fetchApod, initialDate, autoFetch]);
 
   return {
     data,

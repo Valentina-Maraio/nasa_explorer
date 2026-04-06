@@ -4,7 +4,7 @@ import { buildApiUrl } from '../utils/apiUrl';
 import { cacheGet, cacheSet, cacheKey, TTL } from '../utils/cache';
 
 export function useImageSearch(initialQuery = 'moon') {
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 8;
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,46 +16,104 @@ export function useImageSearch(initialQuery = 'moon') {
   const [totalPages, setTotalPages] = useState(0);
   const [totalResults, setTotalResults] = useState(0);
   const latestAssetRequestIdRef = useRef(0);
+  const latestSearchRequestIdRef = useRef(0);
+  const searchAbortControllerRef = useRef(null);
+  const assetAbortControllerRef = useRef(null);
+  const metadataAbortControllerRef = useRef(null);
 
-  const searchMedia = useCallback(async (searchQuery = query, page = 1) => {
+  const searchMedia = useCallback(async (searchQuery, page = 1) => {
+    const effectiveQuery = (searchQuery ?? '').trim();
+    if (!effectiveQuery) {
+      setError('Please enter a search query');
+      setResults([]);
+      setTotalResults(0);
+      setTotalPages(0);
+      setCurrentPage(1);
+      return;
+    }
+
+    latestSearchRequestIdRef.current += 1;
+    const requestId = latestSearchRequestIdRef.current;
+
     setLoading(true);
     setError(null);
     try {
-      const key = cacheKey('search', { q: searchQuery, page, page_size: PAGE_SIZE });
+      const key = cacheKey('search', { q: effectiveQuery, page, page_size: PAGE_SIZE });
       const cached = cacheGet(key);
       if (cached) {
+        if (requestId !== latestSearchRequestIdRef.current) {
+          return;
+        }
+
         setResults(cached.items);
         setTotalResults(cached.resultCount);
         setTotalPages(Math.ceil(cached.resultCount / PAGE_SIZE));
         setCurrentPage(page);
-        setLoading(false);
         return;
       }
 
-      const response = await fetch(buildApiUrl(`/api/images/search?q=${searchQuery}&page=${page}&page_size=${PAGE_SIZE}`));
+      if (searchAbortControllerRef.current) {
+        searchAbortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      searchAbortControllerRef.current = controller;
+
+      const response = await fetch(
+        buildApiUrl(`/api/images/search?q=${effectiveQuery}&page=${page}&page_size=${PAGE_SIZE}`),
+        { signal: controller.signal },
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
       const normalized = normaliseImageSearch(data);
       cacheSet(key, normalized, TTL.IMAGE_SEARCH);
+
+      if (requestId !== latestSearchRequestIdRef.current) {
+        return;
+      }
+
       setResults(normalized.items);
       setTotalResults(normalized.resultCount);
       setTotalPages(Math.ceil(normalized.resultCount / PAGE_SIZE));
       setCurrentPage(page);
-    } catch {
+
+      if (searchAbortControllerRef.current === controller) {
+        searchAbortControllerRef.current = null;
+      }
+    } catch (err) {
+      if (err.name === 'AbortError' || requestId !== latestSearchRequestIdRef.current) {
+        return;
+      }
+
       setError('Failed to search NASA media library');
       setResults([]);
       setTotalResults(0);
       setTotalPages(0);
     } finally {
-      setLoading(false);
+      if (requestId === latestSearchRequestIdRef.current) {
+        setLoading(false);
+      }
     }
-  }, [query]);
+  }, []);
 
   const loadAsset = useCallback(async (nasa_id) => {
     latestAssetRequestIdRef.current += 1;
     const requestId = latestAssetRequestIdRef.current;
+
+    if (assetAbortControllerRef.current) {
+      assetAbortControllerRef.current.abort();
+    }
+
+    if (metadataAbortControllerRef.current) {
+      metadataAbortControllerRef.current.abort();
+    }
+
+    const assetController = new AbortController();
+    const metadataController = new AbortController();
+    assetAbortControllerRef.current = assetController;
+    metadataAbortControllerRef.current = metadataController;
 
     setSelectedAsset(nasa_id);
     setAssetFiles([]);
@@ -69,7 +127,10 @@ export function useImageSearch(initialQuery = 'moon') {
       }
     } else {
       try {
-        const assetRes = await fetch(buildApiUrl(`/api/images/asset?nasa_id=${nasa_id}`));
+        const assetRes = await fetch(
+          buildApiUrl(`/api/images/asset?nasa_id=${nasa_id}`),
+          { signal: assetController.signal },
+        );
         if (!assetRes.ok) {
           throw new Error(`HTTP error! status: ${assetRes.status}`);
         }
@@ -79,7 +140,10 @@ export function useImageSearch(initialQuery = 'moon') {
         if (requestId === latestAssetRequestIdRef.current) {
           setAssetFiles(normalized.items);
         }
-      } catch {
+      } catch (err) {
+        if (err.name === 'AbortError' || requestId !== latestAssetRequestIdRef.current) {
+          return;
+        }
         console.error('Error loading asset files');
       }
     }
@@ -92,7 +156,10 @@ export function useImageSearch(initialQuery = 'moon') {
       }
     } else {
       try {
-        const metaRes = await fetch(buildApiUrl(`/api/images/metadata?nasa_id=${nasa_id}`));
+        const metaRes = await fetch(
+          buildApiUrl(`/api/images/metadata?nasa_id=${nasa_id}`),
+          { signal: metadataController.signal },
+        );
         if (!metaRes.ok) {
           throw new Error(`HTTP error! status: ${metaRes.status}`);
         }
@@ -101,7 +168,10 @@ export function useImageSearch(initialQuery = 'moon') {
         if (requestId === latestAssetRequestIdRef.current) {
           setMetadata(metaData);
         }
-      } catch {
+      } catch (err) {
+        if (err.name === 'AbortError' || requestId !== latestAssetRequestIdRef.current) {
+          return;
+        }
         console.error('Error loading asset metadata');
       }
     }
@@ -113,20 +183,32 @@ export function useImageSearch(initialQuery = 'moon') {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    setCurrentPage(1); // Reset to first page on new search
     searchMedia(query, 1);
   }, [query, searchMedia]);
 
   const handlePageChange = useCallback((page) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
       searchMedia(query, page);
     }
   }, [query, searchMedia, totalPages]);
 
+  // Perform initial search on mount
   useEffect(() => {
-    searchMedia(initialQuery);
+    setQuery(initialQuery);
+    searchMedia(initialQuery, 1);
   }, [searchMedia, initialQuery]);
+
+  useEffect(() => () => {
+    if (searchAbortControllerRef.current) {
+      searchAbortControllerRef.current.abort();
+    }
+    if (assetAbortControllerRef.current) {
+      assetAbortControllerRef.current.abort();
+    }
+    if (metadataAbortControllerRef.current) {
+      metadataAbortControllerRef.current.abort();
+    }
+  }, []);
 
   return {
     query,
