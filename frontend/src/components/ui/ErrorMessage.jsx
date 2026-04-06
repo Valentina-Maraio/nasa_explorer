@@ -1,41 +1,28 @@
-export function ErrorMessage({ 
-  message = 'An error occurred', 
+import { memo } from 'react';
+import styles from './styles/ErrorMessage.module.css';
+
+export const ErrorMessage = memo(function ErrorMessage({
+  message = 'An error occurred',
   onRetry = null,
-  className = ''
+  className = '',
 }) {
   return (
-    <div 
-      className={`error ${className}`}
-      style={{
-        padding: '15px',
-        marginBottom: '20px',
-        background: 'rgba(255, 0, 0, 0.1)',
-        border: '1px solid rgba(255, 0, 0, 0.3)',
-        borderRadius: '2px',
-        color: '#ff6b6b',
-      }}
+    <div
+      className={`error ${styles.errorBox} ${className}`}
     >
-      <div style={{ marginBottom: onRetry ? '10px' : 0 }}>
+      <div className={onRetry ? styles.errorTextWithRetry : styles.errorText}>
         ✗ ERROR: {message}
       </div>
       {onRetry && (
         <button
           onClick={onRetry}
-          style={{
-            padding: '8px 12px',
-            background: 'rgba(255, 100, 100, 0.2)',
-            border: '1px solid rgba(255, 100, 100, 0.5)',
-            color: '#ff6b6b',
-            cursor: 'pointer',
-            borderRadius: '2px',
-            fontSize: '0.9rem',
-          }}
+          className={styles.retryButton}
         >
           ▶ RETRY
         </button>
       )}
     </div>
   );
-}
+});
 
 export default ErrorMessage;

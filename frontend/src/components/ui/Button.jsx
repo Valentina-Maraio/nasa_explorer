@@ -1,28 +1,26 @@
-export function Button({ 
-  children, 
-  onClick, 
-  type = 'button', 
-  disabled = false, 
+import { memo } from 'react';
+import styles from './styles/Button.module.css';
+
+export const Button = memo(function Button({
+  children,
+  onClick,
+  type = 'button',
+  disabled = false,
   loading = false,
   className = '',
-  style = {}
+  style = {},
 }) {
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`btn ${className}`}
-      style={{
-        width: '100%',
-        opacity: disabled || loading ? 0.6 : 1,
-        cursor: disabled || loading ? 'not-allowed' : 'pointer',
-        ...style
-      }}
+      className={`btn ${styles.button} ${className}`}
+      style={style}
     >
       {loading ? '▸ PROCESSING...' : children}
     </button>
   );
-}
+});
 
 export default Button;

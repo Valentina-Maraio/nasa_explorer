@@ -1,0 +1,363 @@
+.page {
+  min-height: calc(100dvh - 28px);
+  display: flex;
+  flex-direction: column;
+}
+
+.mediaDashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+  margin-top: 12px;
+}
+
+.mediaMainPanel {
+  min-width: 0;
+}
+
+.mediaMainCard {
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.galleryLoadingState {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  margin-top: 12px;
+}
+
+.gallerySpinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 255, 159, 0.25);
+  border-top-color: #00ff9f;
+  animation: gallery-spin 0.85s linear infinite;
+}
+
+.galleryItem {
+  background: rgba(0, 255, 159, 0.05);
+  border: 2px solid #00ff9f;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0, 255, 159, 0.2);
+  cursor: pointer;
+}
+
+.galleryItem:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 30px rgba(0, 255, 159, 0.5),
+    inset 0 0 20px rgba(0, 255, 159, 0.1);
+}
+
+.galleryItem img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border: none;
+  box-shadow: none;
+}
+
+.galleryItemInfo {
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.mobileSelectedPanel {
+  display: none;
+}
+
+.mobileSearchPanel {
+  display: none;
+}
+
+.mediaSidePanel {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mediaSidePanelCard {
+  width: 100%;
+  margin: 0;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.mediaSidePanelCard:last-child {
+}
+
+.videoDialogOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 5, 16, 0.72);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: 20px;
+}
+
+.videoDialog {
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(10, 14, 39, 0.96);
+  border: 2px solid #00ff9f;
+  box-shadow:
+    inset 0 0 12px rgba(0, 255, 159, 0.15),
+    0 0 28px rgba(0, 255, 159, 0.3);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.videoDialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.videoDialogClose {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.loaderFrame {
+  width: 100%;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 255, 159, 0.32);
+  border-radius: 2px;
+  background: rgba(0, 255, 159, 0.06);
+}
+
+.loaderGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 18px);
+  gap: 10px;
+}
+
+.loaderSquare {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  background: rgba(0, 255, 159, 0.24);
+  box-shadow: 0 0 0 rgba(0, 255, 159, 0);
+  animation: nasa-square-pulse 1s ease-in-out infinite;
+}
+
+.loaderSquare:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loaderSquare:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.loaderSquare:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+.loaderSquare:nth-child(4) {
+  animation-delay: 0.36s;
+}
+
+.loaderSquare:nth-child(5) {
+  animation-delay: 0.48s;
+}
+
+.loaderSquare:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.resultsTitle {
+  margin-bottom: 20px;
+}
+
+.searchForm {
+  margin-top: 10px;
+}
+
+.formFieldSpacing {
+  margin-bottom: 12px;
+}
+
+.mutedHint {
+  margin-top: 15px;
+  color: rgba(0, 255, 159, 0.6);
+}
+
+.selectedAssetContent {
+  margin-top: 15px;
+}
+
+.assetIdText {
+  color: #00ffff;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.assetTitleText {
+  font-size: 0.9rem;
+  color: rgba(0, 255, 159, 0.8);
+  margin-bottom: 12px;
+}
+
+.assetFileList {
+  max-height: 160px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.assetFileItem {
+  margin-bottom: 8px;
+  color: rgba(0, 255, 159, 0.7);
+}
+
+.assetFileLink {
+  color: #00ffff;
+}
+
+.mediaPreviewWrap {
+  position: relative;
+  margin-top: 12px;
+}
+
+.mediaPreviewOverlayWrap {
+  position: relative;
+}
+
+.mediaElement {
+  width: 100%;
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  border-radius: 2px;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.imageElement {
+  width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  border-radius: 2px;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mediaVisible {
+  opacity: 1;
+}
+
+.noEmbedMessage {
+  margin-top: 12px;
+  color: rgba(0, 255, 159, 0.6);
+  font-size: 0.85rem;
+}
+
+.galleryItemTitle {
+  color: #00ffff;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.galleryItemMeta {
+  font-size: 0.8rem;
+  color: rgba(0, 255, 159, 0.7);
+}
+
+.detailsScroll {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.dialogAssetTitle {
+  margin-bottom: 10px;
+  color: #00ffff;
+  font-weight: bold;
+}
+
+.previewLink {
+  display: inline-block;
+  margin-top: 10px;
+  color: #00ffff;
+  font-size: 0.85rem;
+}
+
+@keyframes nasa-square-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    background: rgba(0, 255, 159, 0.24);
+    box-shadow: 0 0 0 rgba(0, 255, 159, 0);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.08);
+    background: rgba(0, 255, 159, 0.95);
+    box-shadow: 0 0 10px rgba(0, 255, 159, 0.7);
+  }
+}
+
+@keyframes gallery-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    min-height: auto;
+  }
+
+  .mediaDashboardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .mobileSelectedPanel {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .mobileSearchPanel {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .mediaSidePanel {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .galleryGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

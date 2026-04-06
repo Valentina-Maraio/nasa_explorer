@@ -1,13 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApod } from '../hooks/useApod';
-import { SkeletonLoader } from '../components/ui/SkeletonLoader';
 import { ErrorMessage } from '../components/ui/ErrorMessage';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import styles from './styles/ApodPage.module.css';
 
 function ApodPage() {
+  const today = new Date().toISOString().split('T')[0];
   const { data: apod, loading, error, fetchApod } = useApod();
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const hasApod = Boolean(apod);
+  const isImageApod = hasApod && apod.media_type === 'image';
+  const isVideoApod = hasApod && apod.media_type === 'video';
+  const heroTitle = apod?.title || 'ASTRONOMY PICTURE OF THE DAY';
+  const heroDate = apod?.date || selectedDate;
+
+  useEffect(() => {
+    if (!isDescriptionOpen) {
+      return undefined;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsDescriptionOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isDescriptionOpen]);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -22,108 +43,158 @@ function ApodPage() {
     fetchApod(selectedDate);
   };
 
-  return (
-    <div>
-      <h2 className="panel-title text-4xl mb-8">♠ ASTRONOMY PICTURE OF THE DAY ♠</h2>
-
-      <div className="dashboard-grid">
-        <div className="large-panel">
-          {loading ? (
-            <Card>
-              <SkeletonLoader count={1} height={400} />
-            </Card>
-          ) : error ? (
-            <Card>
-              <ErrorMessage message={error} onRetry={handleRetry} className="mb-0" />
-            </Card>
-          ) : apod ? (
-            <Card>
-              <h3 className="panel-title text-2xl">{apod.title}</h3>
-              <p style={{ fontSize: '0.9rem', color: 'rgba(0, 255, 159, 0.7)', marginBottom: '20px' }}>
-                ▸ Captured: {apod.date}
-              </p>
-
-              {apod.media_type === 'image' ? (
-                <img src={apod.url} alt={apod.title} style={{ width: '100%', margin: '20px 0' }} />
-              ) : (
-                <iframe
-                  title="APOD Video"
-                  src={apod.url}
-                  style={{ width: '100%', height: '400px', marginBottom: '20px', border: '2px solid #00ff9f' }}
-                />
-              )}
-
-              <div style={{ background: 'rgba(0, 255, 159, 0.05)', padding: '15px', border: '1px solid rgba(0, 255, 159, 0.3)', borderRadius: '2px', marginTop: '20px' }}>
-                <p style={{ lineHeight: '1.8', fontSize: '0.95rem' }}>{apod.explanation}</p>
-              </div>
-
-              {apod.copyright && (
-                <p style={{ marginTop: '15px', fontSize: '0.85rem', color: 'rgba(0, 255, 159, 0.6)' }}>
-                  ◈ Copyright: {apod.copyright}
-                </p>
-              )}
-            </Card>
-          ) : null}
+  const controlsPanel = (
+    <div className={`dashboard-panel ${styles.overlayPanel} ${styles.sideMenuControlsPanel}`}>
+      <h3 className="panel-title">CONTROLS</h3>
+      <form onSubmit={handleSubmit} className={styles.controlsForm}>
+        <div className={styles.controlsField}>
+          <label className={styles.controlsLabel}>
+            SELECT DATE
+          </label>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            max={today}
+            className={styles.dateInput}
+          />
         </div>
+        <Button type="submit">▶ APOD</Button>
+      </form>
+    </div>
+  );
 
-        <div className="side-panel">
-          <Card>
-            <h3 className="panel-title">CONTROLS</h3>
-            <form onSubmit={handleSubmit} style={{ marginTop: '15px' }}>
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#00ff9f', textShadow: '0 0 5px #00ff9f' }}>
-                  SELECT DATE
-                </label>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  max={new Date().toISOString().split('T')[0]}
-                  style={{ width: '100%' }}
-                />
+  const insightsPanel = (
+    <div className={`dashboard-panel ${styles.overlayPanel}`}>
+      <h3 className="panel-title">AI SAYS ABOUT IT</h3>
+      {apod ? (
+        <div className={`stats-container ${styles.insightsGrid}`}>
+          <div className={`stat-box ${styles.insightStatBox}`}>
+            <div className="stat-box-label">TITLE LENGTH</div>
+          </div>
+          <div className={`stat-box ${styles.insightStatBox}`}>
+            <div className="stat-box-label">DESC LENGTH</div>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.emptyHint}>
+          ▸ Insights will appear after fetch.
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className={styles.page}>
+      <h2 className="panel-title text-4xl mb-8">♠ ASTRONOMY PICTURE OF THE DAY</h2>
+
+      {error && !hasApod ? (
+        <ErrorMessage message={error} onRetry={handleRetry} />
+      ) : (
+        <div className={styles.imageApodLayout}>
+          <div className={styles.heroColumn}>
+            <section className={`dashboard-panel ${styles.heroStage}`}>
+              {isImageApod && apod?.url && (
+                <div className={styles.heroImageLayer} aria-hidden="true">
+                  <img src={apod.url} alt="" className={styles.heroImage} />
+                </div>
+              )}
+
+              {isVideoApod && apod?.url && (
+                <div className={styles.heroImageLayer}>
+                  <iframe
+                    title="APOD Video"
+                    src={apod.url}
+                    className={`${styles.heroImage} ${styles.mediaVideo}`}
+                  />
+                </div>
+              )}
+
+              <div className={styles.infoHoverGroup}>
+                <button
+                  type="button"
+                  className={styles.infoButton}
+                  aria-label="Show APOD description"
+                  disabled={!apod}
+                  onClick={() => setIsDescriptionOpen(true)}
+                >
+                  i
+                </button>
               </div>
-              <Button type="submit">▶ FETCH APOD</Button>
-            </form>
-          </Card>
 
-          {apod && (
-            <>
-              <Card>
-                <h3 className="panel-title">METADATA</h3>
-                <div style={{ fontSize: '0.9rem', marginTop: '15px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px solid rgba(0, 255, 159, 0.2)' }}>
-                    <span>Type:</span>
-                    <span style={{ color: '#00ffff' }}>{apod.media_type.toUpperCase()}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px solid rgba(0, 255, 159, 0.2)' }}>
-                    <span>Date:</span>
-                    <span style={{ color: '#00ffff' }}>{apod.date}</span>
-                  </div>
-                  {apod.copyright && (
-                    <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(0, 255, 159, 0.2)' }}>
-                      <span style={{ fontSize: '0.8rem', color: 'rgba(0, 255, 159, 0.6)' }}>© {apod.copyright}</span>
+              {!hasApod && (
+                <div className={styles.prefetchAnimationWrap}>
+                  <div className={styles.prefetchAnimation} aria-hidden="true">
+                    <div className={styles.prefetchOrbit}>
+                      <div className={styles.prefetchOrbiter} />
                     </div>
+                    <div className={styles.prefetchCore} />
+                    <div className={styles.prefetchSparkA} />
+                    <div className={styles.prefetchSparkB} />
+                  </div>
+                  <p className={styles.prefetchText}>
+                    {loading ? '▸ CONNECTING TO NASA FEED...' : '▸ SELECT A DATE AND FETCH APOD'}
+                  </p>
+                </div>
+              )}
+
+              {loading && hasApod && (
+                <div className={styles.heroLoadingOverlay}>
+                  <div className={styles.loadingStage}>
+                    <div className={styles.loadingRing} />
+                  </div>
+                </div>
+              )}
+            </section>
+
+            <div className={styles.heroMetaBlock}>
+              <h3 className={`panel-title text-2xl ${styles.heroTitle}`}>{heroTitle}</h3>
+            </div>
+          </div>
+
+          <aside className={styles.sideMenu}>
+            <div className={styles.sideMenuCalendar}>
+              {controlsPanel}
+            </div>
+            {insightsPanel}
+          </aside>
+
+          {isDescriptionOpen && (
+            <div
+              className={styles.descriptionDialogOverlay}
+              role="presentation"
+              onClick={() => setIsDescriptionOpen(false)}
+            >
+              <div
+                className={styles.descriptionDialog}
+                role="dialog"
+                aria-modal="true"
+                aria-label="APOD description"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className={styles.descriptionDialogHeader}>
+                  <h3 className="panel-title">DESCRIPTION</h3>
+                  <button
+                    type="button"
+                    className={styles.descriptionDialogClose}
+                    aria-label="Close description dialog"
+                    onClick={() => setIsDescriptionOpen(false)}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className={styles.descriptionContent}>
+                  <p className={styles.descriptionText}>{apod?.explanation || 'No description available.'}</p>
+                  {apod.copyright && (
+                    <p className={styles.copyrightText}>◈ Copyright: {apod.copyright}</p>
                   )}
                 </div>
-              </Card>
-
-              <Card>
-                <h3 className="panel-title">AI SAYS ABOUT IT</h3>
-                <div className="stats-container" style={{ display: 'grid', gap: '10px', marginTop: '15px' }}>
-                  <div className="stat-box" style={{ gridColumn: 'auto' }}>
-                    <div className="stat-box-label">TITLE LENGTH</div>
-                    <div className="stat-box-value">{apod.title.length}</div>
-                  </div>
-                  <div className="stat-box" style={{ gridColumn: 'auto' }}>
-                    <div className="stat-box-label">DESC LENGTH</div>
-                    <div className="stat-box-value">{apod.explanation.length}</div>
-                  </div>
-                </div>
-              </Card>
-            </>
+              </div>
+            </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,3 +1,6 @@
+import React from 'react';
+import styles from './styles/HomePage.module.css';
+
 function HomePage() {
   return (
     <div>
@@ -6,7 +9,7 @@ function HomePage() {
       <div className="dashboard-grid">
         <div className="large-panel dashboard-panel">
           <h3 className="panel-title">ASTRONOMICAL OBSERVATIONS</h3>
-          <p style={{ lineHeight: '1.8', marginBottom: '20px' }}>
+          <p className={styles.overviewText}>
             Welcome to the NASA Data Explorer—a comprehensive system for monitoring and analyzing astronomical phenomena. 
             This interface provides real-time access to NASA's most significant data streams.
           </p>
@@ -31,16 +34,16 @@ function HomePage() {
           </div>
 
           <h3 className="panel-title mt-8">AVAILABLE MODULES</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px', marginTop: '20px' }}>
-            <div className="dashboard-panel">
-              <h4 style={{ color: '#00ffff', marginBottom: '10px', fontSize: '1.2rem' }}>◈ APOD Module</h4>
-              <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+          <div className={styles.modulesGrid}>
+            <div className={`dashboard-panel ${styles.moduleCard}`}>
+              <h4 className={styles.moduleTitle}>◈ APOD Module</h4>
+              <p className={styles.moduleDescription}>
                 Access the Astronomy Picture of the Day with full temporal navigation and media type support.
               </p>
             </div>
-            <div className="dashboard-panel">
-              <h4 style={{ color: '#00ffff', marginBottom: '10px', fontSize: '1.2rem' }}>◈ MARS Module</h4>
-              <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+            <div className={`dashboard-panel ${styles.moduleCard}`}>
+              <h4 className={styles.moduleTitle}>◈ MARS Module</h4>
+              <p className={styles.moduleDescription}>
                 Browse high-resolution rover imagery with advanced filtering and metadata analysis.
               </p>
             </div>
@@ -50,35 +53,29 @@ function HomePage() {
         <div className="side-panel">
           <div className="dashboard-panel">
             <h3 className="panel-title">SYSTEM STATUS</h3>
-            <div style={{ marginTop: '15px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <div className={styles.statusList}>
+              <div className={styles.statusRow}>
                 <span>NASA API</span>
-                <span style={{ color: '#00ff9f' }}>■ ONLINE</span>
+                <span className={styles.onlineValue}>■ ONLINE</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div className={styles.statusRow}>
                 <span>Data Cache</span>
-                <span style={{ color: '#00ff9f' }}>■ ACTIVE</span>
+                <span className={styles.onlineValue}>■ ACTIVE</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={styles.statusRow}>
                 <span>Visualization</span>
-                <span style={{ color: '#00ff9f' }}>■ READY</span>
+                <span className={styles.onlineValue}>■ READY</span>
               </div>
             </div>
           </div>
 
           <div className="dashboard-panel">
             <h3 className="panel-title">NAVIGATION</h3>
-            <div style={{ display: 'grid', gap: '10px', marginTop: '15px' }}>
-              <a href="/apod" style={{ padding: '10px', border: '1px solid #00ff9f', color: '#00ff9f', textDecoration: 'none', borderRadius: '2px', textAlign: 'center', transition: 'all 0.3s' }} 
-                onMouseEnter={(e) => {e.target.style.background = 'rgba(0, 255, 159, 0.1)'; e.target.style.boxShadow = '0 0 15px rgba(0, 255, 159, 0.4)';}}
-                onMouseLeave={(e) => {e.target.style.background = 'transparent'; e.target.style.boxShadow = 'none';}}
-              >
+            <div className={styles.navGrid}>
+              <a href="/apod" className={styles.navLink}>
                 ▶ VIEW APOD
               </a>
-              <a href="/mars" style={{ padding: '10px', border: '1px solid #00ff9f', color: '#00ff9f', textDecoration: 'none', borderRadius: '2px', textAlign: 'center', transition: 'all 0.3s' }}
-                onMouseEnter={(e) => {e.target.style.background = 'rgba(0, 255, 159, 0.1)'; e.target.style.boxShadow = '0 0 15px rgba(0, 255, 159, 0.4)';}}
-                onMouseLeave={(e) => {e.target.style.background = 'transparent'; e.target.style.boxShadow = 'none';}}
-              >
+              <a href="/mars" className={styles.navLink}>
                 ▶ MARS EXPLORER
               </a>
             </div>
@@ -86,7 +83,7 @@ function HomePage() {
 
           <div className="dashboard-panel">
             <h3 className="panel-title">INFO</h3>
-            <div style={{ fontSize: '0.85rem', lineHeight: '1.8', color: 'rgba(0, 255, 159, 0.8)' }}>
+            <div className={styles.infoText}>
               <p>Data Source: NASA Open APIs</p>
               <p>Version: 1.0.0</p>
               <p>Status: OPERATIONAL</p>

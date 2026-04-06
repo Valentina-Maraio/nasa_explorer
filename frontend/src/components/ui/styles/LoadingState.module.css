@@ -1,0 +1,9 @@
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--loading-min-height, 200px);
+  color: rgba(0, 255, 159, 0.7);
+  font-size: 1rem;
+  font-style: italic;
+}
