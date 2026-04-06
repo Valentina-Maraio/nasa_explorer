@@ -8,11 +8,10 @@ function TacticalOverrides({ hazardousOnly, setHazardousOnly, setActiveTabAndRou
     <section className="dashboard-panel">
       <div className={sharedStyles.panelHeading}>TACTICAL OVERRIDES</div>
       <div className={styles.actionGrid}>
-        <Link to="/apod" className={`${styles.actionLink} ${styles.actionLinkDanger}`}>
+        <div className={`${styles.actionLink} ${styles.actionLinkDanger}`}>
           <img src={dangerIcon} alt="" aria-hidden="true" className={styles.actionLinkIcon} />
           DANGER
-        </Link>
-        <Link to="/nasa-media" className={`${styles.actionLink} ${styles.actionLinkWarning}`}>GO TO NASA MEDIA TAB</Link>
+        </div>
         <button type="button" className={`${styles.actionLink} ${styles.actionLinkInfo}`} onClick={() => setActiveTabAndRoute('nasa-media')}>ENTER MEDIA RECON</button>
       </div>
 

@@ -14,6 +14,11 @@ export const TAB_ROUTES = {
   live: '/live',
 };
 
+export const TAB_ROUTE_CONFIG = TABS.map((tab) => ({
+  tabId: tab.id,
+  path: TAB_ROUTES[tab.id],
+}));
+
 export function resolveInitialTab(tabId) {
   return TABS.some((tab) => tab.id === tabId) ? tabId : 'apod';
 }
