@@ -16,6 +16,11 @@ const validateApodQuery = [
   validateRequest,
 ];
 
+const validateDateQuery = [
+  query('date').optional().isISO8601().withMessage('date must be ISO 8601'),
+  validateRequest,
+];
+
 const validateImageSearchQuery = [
   query('q').optional().isString().trim().isLength({ min: 1, max: 120 }).withMessage('q must be a string'),
   query('page').optional().isInt({ min: 1 }).withMessage('page must be >= 1').toInt(),
@@ -30,6 +35,7 @@ const validateNasaIdQuery = [
 
 module.exports = {
   validateApodQuery,
+  validateDateQuery,
   validateImageSearchQuery,
   validateNasaIdQuery,
 };

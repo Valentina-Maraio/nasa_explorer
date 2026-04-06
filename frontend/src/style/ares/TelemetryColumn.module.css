@@ -1,0 +1,49 @@
+.telemetryMetaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.telemetryMetaGrid span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.telemetryMetaGrid strong {
+  display: block;
+  margin-top: 4px;
+  color: #f4f7fb;
+}
+
+.boredomPanel {
+  min-height: 250px;
+}
+
+.statList {
+  display: grid;
+  gap: 6px;
+}
+
+.statLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.statLine span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.statLine strong {
+  display: block;
+  margin-top: 4px;
+  color: #f4f7fb;
+}

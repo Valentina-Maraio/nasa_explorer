@@ -1,0 +1,132 @@
+.apodUtilityGrid {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.apodControlForm {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.apodBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.statusBadge,
+.statusBadgeMuted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.statusBadge {
+  color: #ffb347;
+  border-color: rgba(255, 179, 71, 0.35);
+}
+
+.statusBadgeMuted {
+  color: rgba(214, 221, 231, 0.78);
+}
+
+.apodDetailStack {
+  display: grid;
+  gap: 8px;
+}
+
+.apodHeadline {
+  color: #f5f7fb;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.apodDescription {
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.apodMetaRow {
+  display: grid;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.72rem;
+}
+
+.detailPanel {
+  margin: 0;
+}
+
+.neoMetricsGrid,
+.marsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metricCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+}
+
+.metricCard span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.metricCard strong {
+  display: block;
+  margin-top: 4px;
+  color: #f4f7fb;
+}
+
+@media (max-width: 1400px) {
+  .apodUtilityGrid {
+    grid-template-columns: minmax(200px, 230px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .neoMetricsGrid,
+  .marsGrid,
+  .apodUtilityGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .apodDescription {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    display: block;
+  }
+}
+
+@media (max-width: 560px) {
+  .statusBadge,
+  .statusBadgeMuted {
+    font-size: 0.62rem;
+  }
+}

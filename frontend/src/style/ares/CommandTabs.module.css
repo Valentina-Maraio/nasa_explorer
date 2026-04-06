@@ -1,0 +1,41 @@
+.tabStrip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.tabButton {
+  min-width: 110px;
+  min-height: 34px;
+  padding: 6px 9px;
+  border-color: rgba(216, 220, 226, 0.28);
+  background: rgba(6, 12, 30, 0.85);
+}
+
+.tabButtonActive {
+  color: #ffb347;
+  border-color: #ffb347;
+  box-shadow: 0 0 18px rgba(255, 179, 71, 0.25);
+}
+
+@media (max-width: 768px) {
+  .tabStrip {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .tabButton {
+    min-width: 92px;
+    min-height: 32px;
+    padding: 5px 7px;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .tabButton {
+    min-width: 100%;
+  }
+}

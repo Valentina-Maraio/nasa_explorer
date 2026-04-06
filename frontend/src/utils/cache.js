@@ -5,6 +5,9 @@ export const TTL = {
   IMAGE_SEARCH: 10 * 60 * 1000,  
   ASSET: 30 * 60 * 1000,         
   METADATA: 30 * 60 * 1000,      
+  NEO: 60 * 60 * 1000,
+  EPIC: 6 * 60 * 60 * 1000,
+  MARS_MANIFEST: 6 * 60 * 60 * 1000,
 };
 
 export function cacheSet(key, data, ttlMs) {
@@ -12,7 +15,6 @@ export function cacheSet(key, data, ttlMs) {
     const entry = JSON.stringify({ data, expiresAt: Date.now() + ttlMs });
     localStorage.setItem(NS + key, entry);
   } catch {
-    // Quota exceeded or localStorage unavailable — skip caching
   }
 }
 

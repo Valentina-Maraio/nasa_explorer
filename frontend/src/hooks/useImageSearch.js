@@ -3,8 +3,17 @@ import { normaliseImageSearch, normaliseAssetFiles } from '../utils/normalise';
 import { buildApiUrl } from '../utils/apiUrl';
 import { cacheGet, cacheSet, cacheKey, TTL } from '../utils/cache';
 
-export function useImageSearch(initialQuery = 'moon') {
-  const PAGE_SIZE = 8;
+/**
+ * Custom hook for searching NASA media library and loading asset details
+ * @param {string} initialQuery - Initial search query
+ * @param {number} pageSize - Number of results per page
+ * @returns {Object} { query, results, loading, selectedAsset, assetFiles, metadata, error, handleQueryChange, handleSubmit, loadAsset, currentPage, totalPages, handlePageChange }
+ */
+export function useImageSearch(initialQuery = 'moon', pageSize = 20) {
+  // Use a ref so searchMedia always reads the latest pageSize without being a callback dep
+  const pageSizeRef = useRef(pageSize);
+  pageSizeRef.current = pageSize;
+
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,6 +31,7 @@ export function useImageSearch(initialQuery = 'moon') {
   const metadataAbortControllerRef = useRef(null);
 
   const searchMedia = useCallback(async (searchQuery, page = 1) => {
+    const PS = pageSizeRef.current;
     const effectiveQuery = (searchQuery ?? '').trim();
     if (!effectiveQuery) {
       setError('Please enter a search query');
@@ -38,7 +48,7 @@ export function useImageSearch(initialQuery = 'moon') {
     setLoading(true);
     setError(null);
     try {
-      const key = cacheKey('search', { q: effectiveQuery, page, page_size: PAGE_SIZE });
+      const key = cacheKey('search', { q: effectiveQuery, page, page_size: PS });
       const cached = cacheGet(key);
       if (cached) {
         if (requestId !== latestSearchRequestIdRef.current) {
@@ -47,7 +57,7 @@ export function useImageSearch(initialQuery = 'moon') {
 
         setResults(cached.items);
         setTotalResults(cached.resultCount);
-        setTotalPages(Math.ceil(cached.resultCount / PAGE_SIZE));
+        setTotalPages(Math.ceil(cached.resultCount / PS));
         setCurrentPage(page);
         return;
       }
@@ -60,7 +70,7 @@ export function useImageSearch(initialQuery = 'moon') {
       searchAbortControllerRef.current = controller;
 
       const response = await fetch(
-        buildApiUrl(`/api/images/search?q=${effectiveQuery}&page=${page}&page_size=${PAGE_SIZE}`),
+        buildApiUrl(`/api/images/search?q=${effectiveQuery}&page=${page}&page_size=${PS}`),
         { signal: controller.signal },
       );
       if (!response.ok) {
@@ -76,7 +86,7 @@ export function useImageSearch(initialQuery = 'moon') {
 
       setResults(normalized.items);
       setTotalResults(normalized.resultCount);
-      setTotalPages(Math.ceil(normalized.resultCount / PAGE_SIZE));
+      setTotalPages(Math.ceil(normalized.resultCount / PS));
       setCurrentPage(page);
 
       if (searchAbortControllerRef.current === controller) {
@@ -197,6 +207,17 @@ export function useImageSearch(initialQuery = 'moon') {
     setQuery(initialQuery);
     searchMedia(initialQuery, 1);
   }, [searchMedia, initialQuery]);
+
+  // Re-search at page 1 when pageSize changes (skip if value hasn't changed)
+  const prevPageSizeRef = useRef(pageSize);
+  const queryRef = useRef(query);
+  queryRef.current = query;
+  useEffect(() => {
+    if (prevPageSizeRef.current !== pageSize) {
+      prevPageSizeRef.current = pageSize;
+      searchMedia(queryRef.current, 1);
+    }
+  }, [pageSize, searchMedia]);
 
   useEffect(() => () => {
     if (searchAbortControllerRef.current) {

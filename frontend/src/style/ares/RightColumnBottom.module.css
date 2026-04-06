@@ -1,0 +1,118 @@
+.mediaCardFallback {
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.mediaInspector {
+  display: grid;
+  gap: 10px;
+}
+
+.mediaInspectorHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.mediaInspectorHeader strong {
+  color: #f4f7fb;
+}
+
+.mediaInspectorHeader span {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.68rem;
+}
+
+.mediaInspectorPreview {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.mediaInspectorAsset {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border: 0;
+  max-height: 160px;
+}
+
+.mediaInspectorDescription {
+  color: rgba(255, 255, 255, 0.66);
+  line-height: 1.45;
+  font-size: 0.82rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.logPanel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.logList {
+  display: grid;
+  gap: 6px;
+  max-height: none;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.logItem {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 8px;
+  padding: 8px 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid rgba(216, 220, 226, 0.45);
+}
+
+.logItemDanger {
+  border-left-color: #ff6173;
+  background: rgba(255, 97, 115, 0.06);
+}
+
+.logTime {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.66rem;
+}
+
+.logBody {
+  display: grid;
+  gap: 2px;
+}
+
+.logBody span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.logBody strong {
+  color: #f6f8fc;
+}
+
+@media (max-width: 1280px) {
+  .logList {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 960px) {
+  .mediaInspectorDescription {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    display: block;
+  }
+
+  .logList {
+    overflow-y: visible;
+  }
+}

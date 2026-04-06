@@ -1,8 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
-import ApodPage from './pages/ApodPage';
-import HomePage from './pages/HomePage';
-import NasaMediaPage from './pages/NasaMediaPage';
+import AresCommandPage from './pages/ares/AresCommandPage';
 import './App.css';
 
 function App() {
@@ -10,21 +8,15 @@ function App() {
     <ErrorBoundary>
       <Router>
         <div className="app-container">
-          <nav className="navbar">
-            <div className="navbar-content">
-              <h1 className="glow-text"><Link to="/" className="homepage_button">◈ NASA EXPLORER ◈</Link></h1>
-              <ul className="nav-links">
-                <li><Link to="/apod">APOD</Link></li>
-                <li><Link to="/nasa-media">NASA MEDIA</Link></li>
-              </ul>
-            </div>
-          </nav>
-
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/apod" element={<ApodPage />} />
-              <Route path="/nasa-media" element={<NasaMediaPage />} />
+              <Route path="/" element={<AresCommandPage initialTab="apod" />} />
+              <Route path="/command" element={<AresCommandPage initialTab="apod" />} />
+              <Route path="/apod" element={<AresCommandPage initialTab="apod" />} />
+              <Route path="/nasa-media" element={<AresCommandPage initialTab="nasa-media" />} />
+              <Route path="/neo" element={<AresCommandPage initialTab="neo" />} />
+              <Route path="/mars" element={<AresCommandPage initialTab="mars" />} />
+              <Route path="/live" element={<AresCommandPage initialTab="live" />} />
             </Routes>
           </main>
         </div>
