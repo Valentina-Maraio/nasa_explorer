@@ -16,16 +16,16 @@ html, body, #root {
 }
 
 :root {
-  --primary-color: #00ff9f;
-  --primary-dark: #00cc7f;
+  --primary-color: #d8dce2;
+  --primary-dark: #b8bec8;
   --secondary-color: #00ffff;
   --accent-color: #0088ff;
   --bg-color: #05070d;
   --panel-bg: rgba(10, 14, 39, 0.8);
-  --text-color: #00ff9f;
-  --text-light: rgba(0, 255, 159, 0.7);
-  --text-lighter: rgba(0, 255, 159, 0.5);
-  --border-color: #00ff9f;
+  --text-color: #d8dce2;
+  --text-light: rgba(216, 220, 226, 0.7);
+  --text-lighter: rgba(216, 220, 226, 0.5);
+  --border-color: #d8dce2;
   --error-color: #ff0055;
   
   font-family: 'Courier New', monospace;
@@ -50,6 +50,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Default styles for all elements */
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   letter-spacing: 1px;
@@ -64,11 +65,13 @@ a:hover {
   color: var(--secondary-color);
 }
 
+/* Input, select, button base styles */
 input, select, textarea, button {
   font-family: 'Courier New', monospace;
   font-size: inherit;
 }
 
+/* Ensure all focus states are visible */
 :focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;

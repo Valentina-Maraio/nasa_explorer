@@ -1,0 +1,80 @@
+.mediaSearchForm {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.mediaReconGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.mediaCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0;
+  text-align: left;
+  overflow: hidden;
+}
+
+.mediaCardActive {
+  border-color: rgba(255, 179, 71, 0.55);
+  box-shadow: 0 0 16px rgba(255, 179, 71, 0.18);
+}
+
+.mediaCardImage {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border: 0;
+  height: 96px;
+}
+
+.mediaCardBody {
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+}
+
+.mediaCardBody strong {
+  color: #f4f7fb;
+}
+
+.mediaCardBody span {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.68rem;
+}
+
+.mediaCardFallback {
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 960px) {
+  .mediaReconGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mediaCardImage,
+  .mediaCardFallback {
+    height: 90px;
+    min-height: 90px;
+  }
+}

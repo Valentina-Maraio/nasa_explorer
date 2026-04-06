@@ -1,0 +1,58 @@
+.actionGrid {
+  display: grid;
+  gap: 8px;
+}
+
+.actionLink {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  letter-spacing: 1px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.actionLinkIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.actionLinkDanger {
+  border-color: rgba(255, 97, 115, 0.35);
+  color: #ff7f8c;
+}
+
+.actionLinkWarning {
+  border-color: rgba(255, 179, 71, 0.35);
+  color: #ffb347;
+}
+
+.actionLinkInfo {
+  border-color: rgba(88, 137, 255, 0.35);
+  color: #8db0ff;
+}
+
+.toggleList {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.toggleRow input {
+  width: 44px;
+  accent-color: #ff9800;
+}

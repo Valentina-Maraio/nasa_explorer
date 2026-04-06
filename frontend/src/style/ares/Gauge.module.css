@@ -1,0 +1,46 @@
+.gaugeWrap {
+  position: relative;
+  width: 100px;
+  margin: 4px auto 10px;
+}
+
+.gauge {
+  width: 100px;
+  height: 100px;
+  transform: rotate(-90deg);
+}
+
+.gaugeTrack,
+.gaugeValue {
+  fill: none;
+  stroke-width: 9;
+}
+
+.gaugeTrack {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.gaugeValue {
+  stroke: #ff9800;
+  stroke-linecap: round;
+}
+
+.gaugeLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaugeLabel strong {
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+.gaugeLabel span {
+  color: #ffb347;
+  letter-spacing: 1px;
+  font-size: 0.64rem;
+}
