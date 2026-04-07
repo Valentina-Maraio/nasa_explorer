@@ -66,7 +66,7 @@ function VisualPanel({
       </div>
 
       <div className={styles.apodUtilityGrid}>
-        <section className="dashboard-panel">
+        <section className={`dashboard-panel ${styles.apodControlsPanel}`}>
           <div className={sharedStyles.panelHeading}>APOD CONTROLS</div>
           <form onSubmit={handleApodSubmit} className={styles.apodControlForm}>
             <label className={styles.apodField}>
@@ -86,7 +86,7 @@ function VisualPanel({
           </div>
         </section>
 
-        <section className="dashboard-panel">
+        <section className={`dashboard-panel ${styles.apodDossierPanel}`}>
           <div className={sharedStyles.panelHeading}>APOD DOSSIER</div>
           {apodError && !apod ? (
             <ErrorMessage message={apodError} onRetry={() => fetchApod(selectedApodDate)} />
@@ -94,15 +94,6 @@ function VisualPanel({
             <div className={styles.apodDetailStack}>
               <div className={styles.apodHeadline}>{apod.title}</div>
               <p className={styles.apodDescription}>{apod.explanation}</p>
-              <div className={styles.apodMetaRow}>
-                <span>MEDIA: {apod.media_type.toUpperCase()}</span>
-                <span>COPYRIGHT: {apod.copyright || 'PUBLIC DOMAIN'}</span>
-              </div>
-              {apod.hdurl ? (
-                <a href={apod.hdurl} target="_blank" rel="noreferrer" className={sharedStyles.inlineLink}>
-                  Open HD asset
-                </a>
-              ) : null}
             </div>
           ) : (
             <LoadingState message="▸ PREPARING APOD DOSSIER..." minHeight="120px" />

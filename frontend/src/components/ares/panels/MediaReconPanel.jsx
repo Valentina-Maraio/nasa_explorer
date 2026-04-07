@@ -34,7 +34,6 @@ function MediaReconPanel({
 
       <form onSubmit={handleMediaSubmit} className={styles.mediaSearchForm}>
         <label className={styles.apodField}>
-          <span>QUERY</span>
           <input
             type="text"
             value={mediaQuery}

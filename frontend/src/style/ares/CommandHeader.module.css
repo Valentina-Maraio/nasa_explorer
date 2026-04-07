@@ -29,7 +29,7 @@
 }
 
 .pageSubtitle {
-  color: rgba(216, 220, 226, 0.72);
+  color: #d8dce2b8;
   max-width: 840px;
   line-height: 1.35;
   font-size: 0.88rem;
@@ -42,8 +42,8 @@
 }
 
 .nominalBadge {
-  border: 1px solid rgba(216, 220, 226, 0.35);
-  background: rgba(216, 220, 226, 0.08);
+  border: 1px solid #17a71c59;
+  background: ##17a71c59;
   color: #c6ccd4;
   min-width: 110px;
   min-height: 34px;

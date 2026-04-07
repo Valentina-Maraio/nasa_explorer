@@ -1,7 +1,17 @@
 .apodUtilityGrid {
+  --apod-controls-panel-height: 220px;
+  --apod-dossier-panel-height: 220px;
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
   gap: 10px;
+}
+
+.apodControlsPanel {
+  min-height: var(--apod-controls-panel-height);
+}
+
+.apodDossierPanel {
+  min-height: var(--apod-dossier-panel-height);
 }
 
 .apodControlForm {
@@ -62,7 +72,6 @@
   color: rgba(255, 255, 255, 0.68);
   line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
