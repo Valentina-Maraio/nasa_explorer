@@ -3,6 +3,118 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+.triggeredFloating {
+  --float-x: 9px;
+  --float-y: 7px;
+  --float-rot: 0.9deg;
+}
+
+.triggeredFloating :global(.dashboard-panel) {
+  will-change: transform;
+  transform: translateZ(0);
+  animation: panelFloatA 12s ease-in-out infinite;
+}
+
+.triggeredFloating :global(.dashboard-panel):nth-of-type(2n) {
+  animation-name: panelFloatB;
+  animation-duration: 14s;
+  animation-delay: -2.2s;
+}
+
+.triggeredFloating :global(.dashboard-panel):nth-of-type(3n) {
+  animation-name: panelFloatC;
+  animation-duration: 10s;
+  animation-delay: -1.3s;
+}
+
+.motionOverlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.motionOverlayVisible {
+  opacity: 1;
+}
+
+.motionOverlayHidden {
+  opacity: 0;
+}
+
+.motionImage {
+  position: absolute;
+  display: block;
+  user-select: none;
+  filter: drop-shadow(0 0 8px rgba(216, 220, 226, 0.2));
+}
+
+.roverMotionImage {
+  width: clamp(150px, 18vw, 260px);
+  height: auto;
+  transition-property: left;
+  transition-timing-function: linear;
+}
+
+.buttonMotionImage {
+  width: clamp(120px, 14vw, 190px);
+  height: auto;
+  transition-property: bottom;
+  transition-timing-function: ease-out;
+}
+
+.warningBanner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 50%;
+  width: 100vw;
+  text-align: center;
+  color: #ff1f36;
+  font-size: clamp(72px, 14vw, 180px);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 30;
+  text-shadow: 0 0 20px rgba(255, 31, 54, 0.9), 0 0 40px rgba(255, 31, 54, 0.6);
+  animation: warningPulseFade 1.6s ease forwards;
+}
+
+@keyframes warningPulseFade {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.94); }
+  25% { opacity: 1; transform: translateY(-50%) scale(1); }
+  52% { opacity: 0.85; transform: translateY(-50%) scale(1.06); }
+  74% { opacity: 1; transform: translateY(-50%) scale(1.02); }
+  100% { opacity: 0; transform: translateY(-50%) scale(1.1); }
+}
+
+@keyframes panelFloatA {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25% { transform: translate3d(var(--float-x), calc(-1 * var(--float-y)), 0) rotate(var(--float-rot)); }
+  50% { transform: translate3d(calc(-1 * var(--float-x)), calc(var(--float-y) * 0.7), 0) rotate(calc(-1 * var(--float-rot))); }
+  75% { transform: translate3d(calc(var(--float-x) * 0.5), var(--float-y), 0) rotate(calc(var(--float-rot) * 0.45)); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+@keyframes panelFloatB {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  30% { transform: translate3d(calc(-1 * var(--float-x)), calc(var(--float-y) * 0.9), 0) rotate(calc(-1 * var(--float-rot))); }
+  60% { transform: translate3d(var(--float-x), calc(-1 * var(--float-y)), 0) rotate(calc(var(--float-rot) * 0.75)); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+
+@keyframes panelFloatC {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  20% { transform: translate3d(calc(var(--float-x) * 0.65), var(--float-y), 0) rotate(calc(var(--float-rot) * 0.5)); }
+  50% { transform: translate3d(calc(-1 * var(--float-x)), calc(-1 * var(--float-y)), 0) rotate(calc(-1 * var(--float-rot))); }
+  80% { transform: translate3d(var(--float-x), calc(var(--float-y) * 0.6), 0) rotate(var(--float-rot)); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
 }
 
 .page :global(.dashboard-panel) {
@@ -726,6 +838,12 @@
     height: auto;
     min-height: calc(100dvh - 28px);
     overflow: visible;
+  }
+
+  .triggeredFloating {
+    --float-x: 4px;
+    --float-y: 3px;
+    --float-rot: 0.45deg;
   }
 
   .topBar {
