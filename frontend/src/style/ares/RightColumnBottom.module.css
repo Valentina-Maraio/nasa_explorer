@@ -55,6 +55,10 @@
   flex-direction: column;
 }
 
+.selectedMediaPanel {
+  min-height: 340px;
+}
+
 .logList {
   display: grid;
   gap: 6px;

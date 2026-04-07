@@ -20,7 +20,7 @@ function RightColumnBottom({
 }) {
   if (activeTab === 'nasa-media') {
     return (
-      <section className={`dashboard-panel ${styles.logPanel}`}>
+      <section className={`dashboard-panel ${styles.logPanel} ${styles.selectedMediaPanel}`}>
         <div className={sharedStyles.panelHeading}>SELECTED MEDIA</div>
         {selectedMediaItem ? (
           <div className={styles.mediaInspector}>
@@ -83,7 +83,7 @@ function RightColumnBottom({
             </div>
           ))
         ) : (
-          <div className={sharedStyles.emptyState}>No matching NEO events for the selected filter.</div>
+          <div className={sharedStyles.emptyState}>No NEO events available for today.</div>
         )}
       </div>
     </section>
