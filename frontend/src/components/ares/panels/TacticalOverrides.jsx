@@ -41,6 +41,8 @@ function TacticalOverrides({
               max={today}
               onChange={(event) => setSelectedApodDate(event.target.value)}
             />
+          </div>
+          <div className={styles.apodFormRow}>
             <Button type="submit" loading={apodLoading} className={styles.apodFormButton}>
               ▶ FETCH APOD
             </Button>
