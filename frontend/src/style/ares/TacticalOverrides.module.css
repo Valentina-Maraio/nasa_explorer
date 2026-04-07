@@ -50,6 +50,35 @@
   margin-top: 10px;
 }
 
+.apodForm {
+  display: grid;
+  gap: 8px;
+}
+
+.apodFormLabel {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.apodFormRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.apodFormRow input {
+  min-height: 36px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.apodFormButton {
+  white-space: nowrap;
+}
+
 .toggleRow {
   display: flex;
   align-items: center;
@@ -61,4 +90,10 @@
 .toggleRow input {
   width: 44px;
   accent-color: #ff9800;
+}
+
+@media (max-width: 560px) {
+  .apodFormRow {
+    grid-template-columns: 1fr;
+  }
 }

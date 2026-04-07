@@ -1,4 +1,4 @@
-import { Button } from '../../ui/Button';
+import { useState } from 'react';
 import { ErrorMessage } from '../../ui/ErrorMessage';
 import { LoadingState } from '../../ui/LoadingState';
 import sharedStyles from '../../../style/ares/shared.module.css';
@@ -15,12 +15,12 @@ function VisualPanel({
   manifest,
   today,
   primaryFeed,
-  selectedApodDate,
-  setSelectedApodDate,
-  handleApodSubmit,
   fetchApod,
   formatNumber,
 }) {
+  const [isApodDialogOpen, setIsApodDialogOpen] = useState(false);
+  const hasBackgroundImage = primaryFeed?.type !== 'video' && Boolean(primaryFeed?.url);
+
   return (
     <>
       <div className={`dashboard-panel ${visualStyles.visualPanel}`}>
@@ -40,8 +40,25 @@ function VisualPanel({
               {primaryFeed.type === 'video' ? (
                 <iframe title={primaryFeed.title} src={primaryFeed.url} className={visualStyles.visualMedia} />
               ) : (
-                <img src={primaryFeed.url} alt={primaryFeed.title} className={visualStyles.visualMedia} />
+                <div
+                  className={visualStyles.visualBackgroundImage}
+                  style={{ backgroundImage: `url(${primaryFeed.url})` }}
+                  role="img"
+                  aria-label={primaryFeed.title}
+                />
               )}
+
+              <button
+                type="button"
+                className={visualStyles.apodInfoButton}
+                onClick={() => setIsApodDialogOpen(true)}
+                aria-label="Open image description"
+                title="Open image description"
+                disabled={!apod?.explanation}
+              >
+                i
+              </button>
+
               <div className={visualStyles.crosshairVertical} aria-hidden="true" />
               <div className={visualStyles.crosshairHorizontal} aria-hidden="true" />
               <div className={visualStyles.crosshairCore} aria-hidden="true" />
@@ -65,41 +82,28 @@ function VisualPanel({
         </div>
       </div>
 
-      <div className={styles.apodUtilityGrid}>
-        <section className={`dashboard-panel ${styles.apodControlsPanel}`}>
-          <div className={sharedStyles.panelHeading}>APOD CONTROLS</div>
-          <form onSubmit={handleApodSubmit} className={styles.apodControlForm}>
-            <label className={styles.apodField}>
-              <span>SELECT DATE</span>
-              <input
-                type="date"
-                value={selectedApodDate}
-                max={today}
-                onChange={(event) => setSelectedApodDate(event.target.value)}
-              />
-            </label>
-            <Button type="submit" loading={apodLoading}>▶ FETCH APOD</Button>
-          </form>
-          <div className={styles.apodBadgeRow}>
-            <span className={styles.statusBadge}>{(apod?.media_type || 'image').toUpperCase()}</span>
-            <span className={styles.statusBadgeMuted}>{apod?.date || today}</span>
-          </div>
-        </section>
 
-        <section className={`dashboard-panel ${styles.apodDossierPanel}`}>
-          <div className={sharedStyles.panelHeading}>APOD DOSSIER</div>
-          {apodError && !apod ? (
-            <ErrorMessage message={apodError} onRetry={() => fetchApod(selectedApodDate)} />
-          ) : apod ? (
-            <div className={styles.apodDetailStack}>
-              <div className={styles.apodHeadline}>{apod.title}</div>
-              <p className={styles.apodDescription}>{apod.explanation}</p>
+      {isApodDialogOpen && apod?.explanation ? (
+        <div className={visualStyles.apodDialogOverlay} onClick={() => setIsApodDialogOpen(false)}>
+          <div className={visualStyles.apodDialog} onClick={(event) => event.stopPropagation()}>
+            <div className={visualStyles.apodDialogHeader}>
+              <h3>{apod.title}</h3>
+              <button
+                type="button"
+                className={visualStyles.apodDialogClose}
+                onClick={() => setIsApodDialogOpen(false)}
+                aria-label="Close image description"
+              >
+                x
+              </button>
             </div>
-          ) : (
-            <LoadingState message="▸ PREPARING APOD DOSSIER..." minHeight="120px" />
-          )}
-        </section>
-      </div>
+            <p className={visualStyles.apodDialogText}>{apod.explanation}</p>
+            {hasBackgroundImage ? null : (
+              <p className={visualStyles.apodDialogNote}>Description is shown in dialog while video feed remains embedded in panel.</p>
+            )}
+          </div>
+        </div>
+      ) : null}
 
       {activeTab === 'neo' ? (
         <div className={`dashboard-panel ${styles.detailPanel}`}>

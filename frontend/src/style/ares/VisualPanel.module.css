@@ -2,7 +2,7 @@
   --apod-controls-panel-height: 220px;
   --apod-dossier-panel-height: 220px;
   display: grid;
-  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -115,7 +115,7 @@
 
 @media (max-width: 1400px) {
   .apodUtilityGrid {
-    grid-template-columns: minmax(200px, 230px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
