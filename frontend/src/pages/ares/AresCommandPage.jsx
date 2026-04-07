@@ -20,7 +20,9 @@ import roverImage from '../../assets/rover.png';
 import buttonImage from '../../assets/button_img.jpg';
 import pressedButtonImage from '../../assets/pressed_btn.jpeg';
 
-const ENTER_DURATION_MS = 12000;
+const ROVER_ENTER_DURATION_MS = 5200;
+const BUTTON_ENTER_DURATION_MS = 4200;
+const ENTER_PHASE_DURATION_MS = Math.max(ROVER_ENTER_DURATION_MS, BUTTON_ENTER_DURATION_MS);
 const PRESS_DURATION_MS = 1300;
 const POST_ARRIVAL_DELAY_MS = 2000;
 const FLOAT_TRIGGER_DELAY_MS = 220;
@@ -190,8 +192,8 @@ function AresCommandPage({ initialTab = 'apod' }) {
 
         const rafA = window.requestAnimationFrame(() => {
           const rafB = window.requestAnimationFrame(() => {
-            setRoverTransitionMs(ENTER_DURATION_MS);
-            setButtonTransitionMs(ENTER_DURATION_MS);
+            setRoverTransitionMs(ROVER_ENTER_DURATION_MS);
+            setButtonTransitionMs(BUTTON_ENTER_DURATION_MS);
             setAnimationLayout((layout) => ({
               ...layout,
               roverLeft: layout.roverFinalLeft,
@@ -225,7 +227,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
             timeoutIdsRef.current.push(pressEndTimer);
           }, POST_ARRIVAL_DELAY_MS);
           timeoutIdsRef.current.push(delayTimer);
-        }, ENTER_DURATION_MS);
+        }, ENTER_PHASE_DURATION_MS);
         timeoutIdsRef.current.push(pressTimer);
       }, WARNING_PHASE_MS);
       timeoutIdsRef.current.push(warningPhaseTimer);
@@ -317,8 +319,15 @@ function AresCommandPage({ initialTab = 'apod' }) {
     setDangerLocked(false);
   }, []);
 
+  useEffect(() => {
+    document.body.classList.toggle('global-triggered-floating', isTriggeredFloating);
+    return () => {
+      document.body.classList.remove('global-triggered-floating');
+    };
+  }, [isTriggeredFloating]);
+
   return (
-    <div className={`${styles.page} ${isTriggeredFloating ? styles.triggeredFloating : ''}`}>
+    <div className={styles.page}>
       <div className={`${styles.motionOverlay} ${motionVisible ? styles.motionOverlayVisible : styles.motionOverlayHidden}`} aria-hidden="true">
         <img
           ref={roverRef}

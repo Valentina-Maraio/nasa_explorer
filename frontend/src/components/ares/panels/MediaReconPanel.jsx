@@ -50,7 +50,7 @@ function MediaReconPanel({
       {mediaLoading && mediaResults.length === 0 ? (
         <LoadingState message="▸ SWEEPING NASA MEDIA ARCHIVES..." minHeight="180px" />
       ) : (
-        <>
+        <div className={styles.resultsRegion}>
           <div className={styles.mediaReconGrid}>
             {mediaResults.map((item) => (
               <button
@@ -64,19 +64,20 @@ function MediaReconPanel({
                 ) : (
                   <div className={styles.mediaCardFallback}>NO THUMBNAIL</div>
                 )}
-                <div className={styles.mediaCardBody}>
+                <div className={styles.mediaCardFooter}>
                   <strong>{item.title}</strong>
-                  <span>{item.center} · {item.media_type.toUpperCase()}</span>
                 </div>
               </button>
             ))}
           </div>
-          <Pagination
-            currentPage={mediaCurrentPage}
-            totalPages={mediaTotalPages}
-            onPageChange={handleMediaPageChange}
-          />
-        </>
+          <div className={styles.resultsPagination}>
+            <Pagination
+              currentPage={mediaCurrentPage}
+              totalPages={mediaTotalPages}
+              onPageChange={handleMediaPageChange}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
