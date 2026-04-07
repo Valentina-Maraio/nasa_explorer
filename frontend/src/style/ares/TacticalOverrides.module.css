@@ -47,7 +47,6 @@
 .toggleList {
   display: grid;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .apodForm {
@@ -69,27 +68,18 @@
 
 .apodFormRow input {
   min-height: 36px;
-  padding: 0 8px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
 }
 
+.apodFormRow input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .apodFormButton {
   white-space: nowrap;
-}
-
-.toggleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  color: rgba(255, 255, 255, 0.74);
-}
-
-.toggleRow input {
-  width: 44px;
-  accent-color: #ff9800;
 }
 
 @media (max-width: 560px) {

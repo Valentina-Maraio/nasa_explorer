@@ -40,7 +40,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
   const today = new Date().toISOString().split('T')[0];
   const resolvedTab = resolveInitialTab(tab || initialTab);
   const [activeTab, setActiveTab] = useState(resolvedTab);
-  const [hazardousOnly, setHazardousOnly] = useState(false);
   const [selectedApodDate, setSelectedApodDate] = useState(today);
   const [now, setNow] = useState(Date.now());
   const [dangerLocked, setDangerLocked] = useState(false);
@@ -254,10 +253,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
     }
   }, [loadMediaAsset, mediaResults, selectedMediaAsset]);
 
-  const missionLog = useMemo(() => {
-    const objects = neo?.objects || [];
-    return hazardousOnly ? objects.filter((item) => item.isPotentiallyHazardous) : objects;
-  }, [hazardousOnly, neo]);
+  const missionLog = useMemo(() => neo?.objects || [], [neo]);
 
   const visibleMissionLog = useMemo(
     () => missionLog.slice(0, 6),
@@ -432,8 +428,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
 
         <aside className={styles.rightColumn}>
           <TacticalOverrides
-            hazardousOnly={hazardousOnly}
-            setHazardousOnly={setHazardousOnly}
             setActiveTabAndRoute={setActiveTabAndRoute}
             onDangerTrigger={handleDangerTrigger}
             dangerDisabled={dangerLocked}
@@ -442,6 +436,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
             handleApodSubmit={handleApodSubmit}
             apodLoading={apodLoading}
             today={today}
+            isNasaMediaPage={activeTab === 'nasa-media'}
           />
 
           <RightColumnBottom
