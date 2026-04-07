@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {useApod} from '../../hooks/useApod';
 import { useEpic } from '../../hooks/useEpic';
 import { useImageSearch } from '../../hooks/useImageSearch';
@@ -21,8 +21,10 @@ import styles from '../../style/pages/AresCommandPage.module.css';
 function AresCommandPage({ initialTab = 'apod' }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { tab } = useParams();
   const today = new Date().toISOString().split('T')[0];
-  const [activeTab, setActiveTab] = useState(resolveInitialTab(initialTab));
+  const resolvedTab = resolveInitialTab(tab || initialTab);
+  const [activeTab, setActiveTab] = useState(resolvedTab);
   const [hazardousOnly, setHazardousOnly] = useState(false);
   const [selectedApodDate, setSelectedApodDate] = useState(today);
   const [now, setNow] = useState(Date.now());
@@ -59,8 +61,8 @@ function AresCommandPage({ initialTab = 'apod' }) {
   }, []);
 
   useEffect(() => {
-    setActiveTab(resolveInitialTab(initialTab));
-  }, [initialTab]);
+    setActiveTab(resolveInitialTab(tab || initialTab));
+  }, [initialTab, tab]);
 
   const setActiveTabAndRoute = (tabId) => {
     const nextTab = resolveInitialTab(tabId);

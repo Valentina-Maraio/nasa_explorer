@@ -31,7 +31,6 @@
 
 .mediaCardActive {
   border-color: rgba(255, 179, 71, 0.55);
-  box-shadow: 0 0 16px rgba(255, 179, 71, 0.18);
 }
 
 .mediaCardImage {
