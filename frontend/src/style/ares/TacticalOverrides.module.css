@@ -14,6 +14,12 @@
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #ffffff;
+  cursor: pointer;
+}
+
+.actionLink:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .actionLinkIcon {
