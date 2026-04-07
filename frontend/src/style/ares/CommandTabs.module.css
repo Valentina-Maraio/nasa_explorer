@@ -17,7 +17,6 @@
 .tabButtonActive {
   color: #ffb347;
   border-color: #ffb347;
-  box-shadow: 0 0 18px rgba(255, 179, 71, 0.25);
 }
 
 @media (max-width: 768px) {
