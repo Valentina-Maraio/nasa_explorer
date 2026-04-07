@@ -424,9 +424,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
                   manifest={manifest}
                   today={today}
                   primaryFeed={primaryFeed}
-                  selectedApodDate={selectedApodDate}
-                  setSelectedApodDate={setSelectedApodDate}
-                  handleApodSubmit={handleApodSubmit}
                   fetchApod={fetchApod}
                   formatNumber={formatNumber}
                 />
@@ -440,6 +437,11 @@ function AresCommandPage({ initialTab = 'apod' }) {
             setActiveTabAndRoute={setActiveTabAndRoute}
             onDangerTrigger={handleDangerTrigger}
             dangerDisabled={dangerLocked}
+            selectedApodDate={selectedApodDate}
+            setSelectedApodDate={setSelectedApodDate}
+            handleApodSubmit={handleApodSubmit}
+            apodLoading={apodLoading}
+            today={today}
           />
 
           <RightColumnBottom

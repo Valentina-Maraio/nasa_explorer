@@ -1,3 +1,4 @@
+import { Button } from '../../ui/Button';
 import dangerIcon from '../../../assets/danger.svg';
 import sharedStyles from '../../../style/ares/shared.module.css';
 import styles from '../../../style/ares/TacticalOverrides.module.css';
@@ -8,6 +9,11 @@ function TacticalOverrides({
   setActiveTabAndRoute,
   onDangerTrigger,
   dangerDisabled,
+  selectedApodDate,
+  setSelectedApodDate,
+  handleApodSubmit,
+  apodLoading,
+  today,
 }) {
   return (
     <section className="dashboard-panel">
@@ -26,6 +32,21 @@ function TacticalOverrides({
       </div>
 
       <div className={styles.toggleList}>
+        <form onSubmit={handleApodSubmit} className={styles.apodForm}>
+          <div className={styles.apodFormLabel}>APOD DATE</div>
+          <div className={styles.apodFormRow}>
+            <input
+              type="date"
+              value={selectedApodDate}
+              max={today}
+              onChange={(event) => setSelectedApodDate(event.target.value)}
+            />
+            <Button type="submit" loading={apodLoading} className={styles.apodFormButton}>
+              ▶ FETCH APOD
+            </Button>
+          </div>
+        </form>
+
         <label className={styles.toggleRow}>
           <span>HAZARDOUS ONLY</span>
           <input type="checkbox" checked={hazardousOnly} onChange={() => setHazardousOnly((value) => !value)} />
