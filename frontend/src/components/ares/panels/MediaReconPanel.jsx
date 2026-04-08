@@ -32,17 +32,6 @@ function MediaReconPanel({
         </div>
       </div>
 
-      <form onSubmit={handleMediaSubmit} className={styles.mediaSearchForm}>
-        <label className={styles.apodField}>
-          <input
-            type="text"
-            value={mediaQuery}
-            onChange={handleMediaQueryChange}
-            placeholder="apollo, nebula, saturn, mars..."
-          />
-        </label>
-        <Button type="submit" loading={mediaLoading}>▶ EXECUTE SEARCH</Button>
-      </form>
 
       {mediaError ? <ErrorMessage message={mediaError} onRetry={() => searchMedia(mediaQuery, mediaCurrentPage)} /> : null}
 
@@ -70,10 +59,23 @@ function MediaReconPanel({
             ))}
           </div>
           <div className={styles.resultsPagination}>
+            <form onSubmit={handleMediaSubmit} className={styles.mediaSearchForm}>
+              <label className={styles.apodField}>
+                <input
+                  type="text"
+                  value={mediaQuery}
+                  onChange={handleMediaQueryChange}
+                  placeholder="apollo, nebula, saturn, mars..."
+                />
+              </label>
+              <Button type="submit" loading={mediaLoading} className={styles.mediaSearchButton}>▶ EXECUTE SEARCH</Button>
+            </form>
             <Pagination
               currentPage={mediaCurrentPage}
               totalPages={mediaTotalPages}
               onPageChange={handleMediaPageChange}
+              className={styles.resultsPager}
+              style={{ marginTop: 0 }}
             />
           </div>
         </div>

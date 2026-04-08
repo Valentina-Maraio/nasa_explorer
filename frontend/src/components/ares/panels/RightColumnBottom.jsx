@@ -28,33 +28,9 @@ function RightColumnBottom({
               <strong>{selectedMediaItem.title}</strong>
               <span>{selectedMediaItem.center} · {selectedMediaItem.media_type.toUpperCase()}</span>
             </div>
-            <div className={styles.mediaInspectorPreview}>
-              {mediaPreviewVideo ? (
-                <video controls preload="metadata" className={styles.mediaInspectorAsset}>
-                  <source src={mediaPreviewVideo.href} type="video/mp4" />
-                </video>
-              ) : mediaPreviewImage ? (
-                <img
-                  src={mediaPreviewImage.href}
-                  alt={selectedMediaItem.title}
-                  className={styles.mediaInspectorAsset}
-                />
-              ) : selectedMediaItem.thumbnail ? (
-                <img
-                  src={selectedMediaItem.thumbnail}
-                  alt={selectedMediaItem.title}
-                  className={styles.mediaInspectorAsset}
-                />
-              ) : (
-                <div className={styles.mediaCardFallback}>NO PREVIEW ASSET</div>
-              )}
-            </div>
             <p className={styles.mediaInspectorDescription}>
               {selectedMediaItem.description || 'No description available for this NASA media asset.'}
             </p>
-            <a href={mediaPreviewVideo?.href || mediaPreviewImage?.href || selectedMediaItem.thumbnail || '#'} target="_blank" rel="noreferrer" className={sharedStyles.inlineLink}>
-              Open selected asset
-            </a>
           </div>
         ) : (
           <LoadingState message="▸ SELECT A MEDIA RESULT" minHeight="140px" />
@@ -73,7 +49,7 @@ function RightColumnBottom({
           <LoadingState message="▸ BUFFERING APPROACH LOG..." minHeight="120px" />
         ) : visibleMissionLog.length > 0 ? (
           visibleMissionLog.map((item) => (
-            <div key={item.id} className={`${styles.logItem} ${item.isPotentiallyHazardous ? styles.logItemDanger : ''}`}>
+            <div key={item.id} className={`${styles.logItem}`}>
               <div className={styles.logTime}>{item.approachDateTime || item.approachDate}</div>
               <div className={styles.logBody}>
                 <strong>{item.name}</strong>
