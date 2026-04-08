@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import {useApod} from '../../hooks/useApod';
-import { useEpic } from '../../hooks/useEpic';
-import { useImageSearch } from '../../hooks/useImageSearch';
-import { useMarsManifest } from '../../hooks/useMarsManifest';
-import { useNeo } from '../../hooks/useNeo';
-import { ErrorMessage } from '../../components/ui/ErrorMessage';
-import CommandHeader from '../../components/ares/CommandHeader';
-import MediaReconPanel from '../../components/ares/panels/MediaReconPanel';
-import LivePanel from '../../components/ares/panels/LivePanel';
-import RightColumnBottom from '../../components/ares/panels/RightColumnBottom';
-import TacticalOverrides from '../../components/ares/panels/TacticalOverrides';
-import TelemetryColumn from '../../components/ares/panels/TelemetryColumn';
-import VisualPanel from '../../components/ares/panels/VisualPanel';
+import {useApod} from '../../hooks/useApod.js';
+import { useEpic } from '../../hooks/useEpic.js';
+import { useImageSearch } from '../../hooks/useImageSearch.js';
+import { useMarsManifest } from '../../hooks/useMarsManifest.js';
+import { useNeo } from '../../hooks/useNeo.js';
+import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
+import CommandHeader from '../../components/CommandHeader.jsx';
+import MediaReconPanel from '../../components/MediaReconPanel.jsx';
+import LivePanel from '../../components/LivePanel.jsx';
+import RightColumnBottom from '../../components/RightColumnBottom.jsx';
+import TacticalOverrides from '../../components/TacticalOverrides.jsx';
+import TelemetryColumn from '../../components/TelemetryColumn.jsx';
+import VisualPanel from '../../components/VisualPanel.jsx';
 import { TABS, getRouteForTab, resolveInitialTab } from '../config/tabs.js'
 import { formatCountdown, formatNumber } from '../utils/formatters.js';
-import styles from '../../style/pages/AresCommandPage.module.css';
+import styles from './style/AresCommandPage.module.css';
 import roverImage from '../../assets/rover.png';
 import buttonImage from '../../assets/button_img.jpg';
 import pressedButtonImage from '../../assets/pressed_btn.jpeg';
@@ -436,7 +436,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
             handleApodSubmit={handleApodSubmit}
             apodLoading={apodLoading}
             today={today}
-            isNasaMediaPage={activeTab === 'nasa-media'}
+            isNasaMediaPage={activeTab === 'nasa-media' || activeTab === 'live'}
           />
 
           <RightColumnBottom

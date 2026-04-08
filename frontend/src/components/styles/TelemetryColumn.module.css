@@ -1,3 +1,17 @@
+.leftColumn {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+  margin-bottom: 8px;
+}
+
 .telemetryMetaGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;

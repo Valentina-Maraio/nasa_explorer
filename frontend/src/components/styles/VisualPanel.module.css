@@ -4,6 +4,13 @@
   flex-direction: column;
 }
 
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+  margin-bottom: 8px;
+}
+
 .visualHeader {
   display: flex;
   align-items: center;
@@ -150,6 +157,12 @@
   font-size: 0.75rem;
 }
 
+.crosshairVertical,
+.crosshairHorizontal {
+  position: absolute;
+  background: rgba(255, 179, 71, 0.16);
+}
+
 .crosshairVertical {
   top: 0;
   bottom: 0;
@@ -162,6 +175,16 @@
   right: 0;
   top: 50%;
   height: 1px;
+}
+
+.crosshairCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(255, 179, 71, 0.65);
+  transform: translate(-50%, -50%);
 }
 
 .visualDataTopLeft,
@@ -201,15 +224,128 @@
   font-size: 0.85rem;
 }
 
-@media (max-width: 1600px) {
-  .visualStage {
-    min-height: 260px;
-  }
+.apodUtilityGrid {
+  --apod-controls-panel-height: 220px;
+  --apod-dossier-panel-height: 220px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.apodControlsPanel {
+  min-height: var(--apod-controls-panel-height);
+}
+
+.apodDossierPanel {
+  min-height: var(--apod-dossier-panel-height);
+}
+
+.apodControlForm {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField {
+  display: grid;
+  gap: 8px;
+}
+
+.apodField span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.apodBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.statusBadge,
+.statusBadgeMuted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.statusBadge {
+  color: #ffb347;
+  border-color: rgba(255, 179, 71, 0.35);
+}
+
+.statusBadgeMuted {
+  color: rgba(214, 221, 231, 0.78);
+}
+
+.apodDetailStack {
+  display: grid;
+  gap: 8px;
+}
+
+.apodHeadline {
+  color: #f5f7fb;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.apodDescription {
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.apodMetaRow {
+  display: grid;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.72rem;
+}
+
+.detailPanel {
+  margin: 0;
+}
+
+.neoMetricsGrid,
+.marsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metricCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+}
+
+.metricCard span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+}
+
+.metricCard strong {
+  display: block;
+  margin-top: 4px;
+  color: #f4f7fb;
 }
 
 @media (max-width: 1400px) {
   .visualStage {
     min-height: 240px;
+  }
+
+  .apodUtilityGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -217,17 +353,17 @@
   .visualStage {
     min-height: 300px;
   }
-}
 
-@media (max-width: 768px) {
-  .visualHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  .neoMetricsGrid,
+  .marsGrid,
+  .apodUtilityGrid {
+    grid-template-columns: 1fr;
   }
 
-  .visualStage {
-    min-height: 240px;
+  .apodDescription {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    display: block;
   }
 }
 
@@ -249,5 +385,10 @@
 
   .visualStage {
     min-height: 200px;
+  }
+
+  .statusBadge,
+  .statusBadgeMuted {
+    font-size: 0.62rem;
   }
 }

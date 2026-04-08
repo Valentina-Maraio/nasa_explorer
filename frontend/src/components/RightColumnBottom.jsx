@@ -1,7 +1,6 @@
-import { ErrorMessage } from '../../ui/ErrorMessage';
-import { LoadingState } from '../../ui/LoadingState';
-import sharedStyles from '../../../style/ares/shared.module.css';
-import styles from '../../../style/ares/RightColumnBottom.module.css';
+import { ErrorMessage } from '../ui/ErrorMessage';
+import { LoadingState } from '../ui/LoadingState';
+import styles from './styles/RightColumnBottom.module.css';
 
 function RightColumnBottom({
   activeTab,
@@ -21,7 +20,7 @@ function RightColumnBottom({
   if (activeTab === 'nasa-media') {
     return (
       <section className={`dashboard-panel ${styles.logPanel} ${styles.selectedMediaPanel}`}>
-        <div className={sharedStyles.panelHeading}>SELECTED MEDIA</div>
+        <div className={styles.panelHeading}>SELECTED MEDIA</div>
         {selectedMediaItem ? (
           <div className={styles.mediaInspector}>
             <div className={styles.mediaInspectorHeader}>
@@ -41,7 +40,7 @@ function RightColumnBottom({
 
   return (
     <section className={`dashboard-panel ${styles.logPanel}`}>
-      <div className={sharedStyles.panelHeading}>MISSION LOG</div>
+      <div className={styles.panelHeading}>MISSION LOG</div>
       {neoError ? <ErrorMessage message={neoError} onRetry={() => fetchNeo(today)} /> : null}
       {activeTab === 'mars' && marsError ? <ErrorMessage message={marsError} onRetry={() => fetchManifest('curiosity')} /> : null}
       <div className={styles.logList}>
@@ -59,7 +58,7 @@ function RightColumnBottom({
             </div>
           ))
         ) : (
-          <div className={sharedStyles.emptyState}>No NEO events available for today.</div>
+          <div className={styles.emptyState}>No NEO events available for today.</div>
         )}
       </div>
     </section>

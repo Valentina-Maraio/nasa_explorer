@@ -1,0 +1,107 @@
+.visualPanel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+  margin-bottom: 8px;
+}
+
+.visualHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feedBadges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.feedBadge,
+.feedBadgeMuted {
+  padding: 5px 8px;
+  font-size: 0.64rem;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.feedBadge {
+  color: #ff6173;
+  background: rgba(255, 97, 115, 0.12);
+}
+
+.feedBadgeMuted {
+  color: rgba(210, 218, 230, 0.8);
+}
+
+.visualStage {
+  position: relative;
+  flex: 1;
+  min-height: 280px;
+  background: linear-gradient(180deg, rgba(5, 8, 20, 0.92), rgba(1, 4, 11, 0.98));
+  overflow: hidden;
+  border: 1px solid rgba(255, 179, 71, 0.12);
+}
+
+.visualMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 0;
+}
+
+@media (max-width: 1600px) {
+  .visualStage {
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .visualStage {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 960px) {
+  .visualStage {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .visualHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .visualStage {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 560px) {
+  .feedBadges {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .feedBadge,
+  .feedBadgeMuted {
+    font-size: 0.62rem;
+  }
+
+  .visualStage {
+    min-height: 200px;
+  }
+}

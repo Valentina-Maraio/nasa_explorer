@@ -1,9 +1,7 @@
-import { Button } from '../../ui/Button';
-import sharedStyles from '../../../style/ares/shared.module.css';
-import styles from '../../../style/ares/TacticalOverrides.module.css';
+import { Button } from '../ui/Button';
+import styles from './styles/TacticalOverrides.module.css';
 
 function TacticalOverrides({
-  setActiveTabAndRoute,
   onDangerTrigger,
   dangerDisabled,
   selectedApodDate,
@@ -14,7 +12,7 @@ function TacticalOverrides({
 }) {
   return (
     <section className={`dashboard-panel ${styles.tacticalPanel}`}>
-      <div className={sharedStyles.panelHeading}>TACTICAL OVERRIDES</div>
+      <div className={styles.panelHeading}>TACTICAL OVERRIDES</div>
       <div className={styles.actionGrid}>
         <button
           type="button"

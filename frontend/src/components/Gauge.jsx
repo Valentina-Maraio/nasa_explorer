@@ -1,4 +1,4 @@
-import styles from '../../style/ares/Gauge.module.css';
+import styles from './styles/Gauge.module.css';
 
 function Gauge({ value }) {
   const clamped = Math.max(0, Math.min(100, value));

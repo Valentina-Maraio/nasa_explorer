@@ -1,10 +1,8 @@
-import { Button } from '../../ui/Button';
-import { ErrorMessage } from '../../ui/ErrorMessage';
-import { LoadingState } from '../../ui/LoadingState';
-import { Pagination } from '../../ui/Pagination';
-import sharedStyles from '../../../style/ares/shared.module.css';
-import visualStyles from '../../../style/ares/visual.module.css';
-import styles from '../../../style/ares/MediaReconPanel.module.css';
+import { Button } from '../ui/Button';
+import { ErrorMessage } from '../ui/ErrorMessage';
+import { LoadingState } from '../ui/LoadingState';
+import { Pagination } from '../ui/Pagination';
+import styles from './styles/MediaReconPanel.module.css';
 
 function MediaReconPanel({
   mediaQuery,
@@ -23,12 +21,12 @@ function MediaReconPanel({
   formatNumber,
 }) {
   return (
-    <div className={`dashboard-panel ${visualStyles.visualPanel}`}>
-      <div className={visualStyles.visualHeader}>
-        <div className={sharedStyles.panelHeading}>MEDIA RECONNAISSANCE</div>
-        <div className={visualStyles.feedBadges}>
-          <span className={visualStyles.feedBadgeMuted}>{formatNumber(mediaTotalResults)} RESULTS</span>
-          <span className={visualStyles.feedBadge}>PAGE {mediaCurrentPage}</span>
+    <div className={`dashboard-panel ${styles.visualPanel}`}>
+      <div className={styles.visualHeader}>
+        <div className={styles.panelHeading}>MEDIA RECONNAISSANCE</div>
+        <div className={styles.feedBadges}>
+          <span className={styles.feedBadgeMuted}>{formatNumber(mediaTotalResults)} RESULTS</span>
+          <span className={styles.feedBadge}>PAGE {mediaCurrentPage}</span>
         </div>
       </div>
 

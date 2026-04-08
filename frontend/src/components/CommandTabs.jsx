@@ -1,4 +1,4 @@
-import styles from '../../style/ares/CommandTabs.module.css';
+import styles from './styles/CommandTabs.module.css';
 
 function CommandTabs({ tabs, activeTab, onTabChange }) {
   return (

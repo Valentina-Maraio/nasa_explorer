@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './ui/ErrorBoundary';
 import AresCommandPage from './pages/ares/AresCommandPage';
-import StarField from './components/StarField';
+import StarField from './ui/StarField';
 import './App.css';
 
 function App() {
