@@ -21,7 +21,6 @@ html, body, #root {
   --secondary-color: #00ffff;
   --accent-color: #0088ff;
   --bg-color: #05070d;
-  --panel-bg: rgba(10, 14, 39, 0.45);
   --text-color: #d8dce2;
   --text-light: rgba(216, 220, 226, 0.7);
   --text-lighter: rgba(216, 220, 226, 0.5);

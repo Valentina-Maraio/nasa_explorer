@@ -33,9 +33,17 @@ const validateNasaIdQuery = [
   validateRequest,
 ];
 
+const validateWeatherQuery = [
+  query('date').optional().isISO8601().withMessage('date must be ISO 8601'),
+  query('units').optional().isIn(['metric', 'imperial']).withMessage('units must be metric or imperial'),
+  query('days').optional().isInt({ min: 1, max: 14 }).withMessage('days must be 1-14').toInt(),
+  validateRequest,
+];
+
 module.exports = {
   validateApodQuery,
   validateDateQuery,
   validateImageSearchQuery,
   validateNasaIdQuery,
+  validateWeatherQuery,
 };

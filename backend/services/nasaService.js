@@ -93,6 +93,87 @@ async function fetchMarsManifest(rover = 'curiosity') {
   }
 }
 
+async function fetchMarsWeather(date) {
+  const apiKey = getApiKey();
+
+  const requestConfigs = [
+    {
+      url: 'https://api.nasa.gov/insight_weather/',
+      params: {
+        api_key: apiKey,
+        feedtype: 'json',
+        ver: '1.0',
+      },
+    },
+    {
+      url: 'https://api.nasa.gov/insight_weather/',
+      params: {
+        api_key: apiKey,
+      },
+    },
+  ];
+
+  let lastError = null;
+
+  for (const config of requestConfigs) {
+    try {
+      const response = await client.get(config.url, {
+        params: config.params,
+      });
+      return response.data;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (date) {
+    throw mapAxiosError(lastError, 'Failed to fetch Mars weather data for requested date');
+  }
+
+  throw mapAxiosError(lastError, 'Failed to fetch Mars weather data');
+}
+
+async function fetchMoonWeatherProxy(date, days = 7) {
+  const targetDate = date || new Date().toISOString().split('T')[0];
+  const desiredPoints = Math.max(1, Math.min(Number(days) || 7, 14));
+  const maxLookbackDays = Math.max(desiredPoints * 3, desiredPoints);
+  const history = [];
+  let latestItems = [];
+  let lastError = null;
+
+  for (let index = 0; index < maxLookbackDays && history.length < desiredPoints; index += 1) {
+    const candidateDate = new Date(`${targetDate}T00:00:00Z`);
+    candidateDate.setUTCDate(candidateDate.getUTCDate() - index);
+    const isoDate = candidateDate.toISOString().split('T')[0];
+
+    try {
+      const items = await fetchEpicNatural(isoDate);
+      if (Array.isArray(items) && items.length > 0) {
+        if (latestItems.length === 0) {
+          latestItems = items;
+        }
+
+        history.push({
+          date: isoDate,
+          item: items[0],
+        });
+      }
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (history.length === 0 && lastError) {
+    throw mapAxiosError(lastError, 'Failed to fetch Moon proxy telemetry');
+  }
+
+  return {
+    date: targetDate,
+    items: latestItems,
+    history,
+  };
+}
+
 async function searchImages({ q, page, page_size }) {
   try {
     const response = await client.get('https://images-api.nasa.gov/search', {
@@ -128,6 +209,8 @@ module.exports = {
   fetchNeoFeed,
   fetchEpicNatural,
   fetchMarsManifest,
+  fetchMarsWeather,
+  fetchMoonWeatherProxy,
   searchImages,
   fetchAsset,
   fetchMetadata,
