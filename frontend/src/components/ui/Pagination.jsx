@@ -1,7 +1,13 @@
 import { memo, useMemo, useCallback } from 'react';
 import styles from './styles/Pagination.module.css';
 
-export const Pagination = memo(function Pagination({ currentPage, totalPages, onPageChange }) {
+export const Pagination = memo(function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  className = '',
+  style = {},
+}) {
   if (totalPages <= 1) return null;
 
   const pageNumbers = useMemo(() => {
@@ -51,7 +57,7 @@ export const Pagination = memo(function Pagination({ currentPage, totalPages, on
   }, [onPageChange]);
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className}`} style={style}>
       <button
         onClick={handlePrevClick}
         disabled={currentPage === 1}

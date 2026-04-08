@@ -1,11 +1,21 @@
 .mediaSearchForm {
-  display: grid;
+  display: flex;
+  align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
+  max-width: 460px;
 }
 
 .apodField {
   display: grid;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.apodField input {
+  width: 100%;
 }
 
 .apodField span {
@@ -35,8 +45,22 @@
 }
 
 .resultsPagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   flex: 0 0 auto;
   margin-top: 10px;
+}
+
+.resultsPager {
+  justify-content: flex-end;
+}
+
+.mediaSearchButton {
+  width: auto;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .mediaCard {
@@ -110,6 +134,25 @@
     grid-template-columns: 1fr;
     grid-template-rows: none;
     overflow: auto;
+  }
+
+  .resultsPagination {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .mediaSearchForm {
+    max-width: none;
+    width: 100%;
+  }
+
+  .resultsPager {
+    justify-content: center;
+  }
+
+  .mediaSearchButton {
+    width: 100%;
   }
 }
 

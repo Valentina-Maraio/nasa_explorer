@@ -7,8 +7,11 @@
 }
 
 .mediaInspector {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  min-height: 0;
+  flex: 1;
 }
 
 .mediaInspectorHeader {
@@ -43,10 +46,14 @@
   color: rgba(255, 255, 255, 0.66);
   line-height: 1.45;
   font-size: 0.82rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: block;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(216, 220, 226, 0.42) rgba(255, 255, 255, 0.08);
 }
 
 .logPanel {
@@ -57,6 +64,10 @@
 
 .selectedMediaPanel {
   min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
 }
 
 .logList {
@@ -71,20 +82,24 @@
   scrollbar-color: rgba(216, 220, 226, 0.42) rgba(255, 255, 255, 0.08);
 }
 
-.logList::-webkit-scrollbar {
+.logList::-webkit-scrollbar,
+.mediaInspectorDescription::-webkit-scrollbar {
   width: 6px;
 }
 
-.logList::-webkit-scrollbar-track {
+.logList::-webkit-scrollbar-track,
+.mediaInspectorDescription::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.logList::-webkit-scrollbar-thumb {
+.logList::-webkit-scrollbar-thumb,
+.mediaInspectorDescription::-webkit-scrollbar-thumb {
   background: rgba(216, 220, 226, 0.42);
   border-radius: 999px;
 }
 
-.logList::-webkit-scrollbar-thumb:hover {
+.logList::-webkit-scrollbar-thumb:hover,
+.mediaInspectorDescription::-webkit-scrollbar-thumb:hover {
   background: rgba(216, 220, 226, 0.62);
 }
 
@@ -125,9 +140,8 @@
 
 @media (max-width: 960px) {
   .mediaInspectorDescription {
-    -webkit-line-clamp: unset;
-    overflow: visible;
-    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
 }

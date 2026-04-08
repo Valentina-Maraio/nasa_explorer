@@ -201,6 +201,10 @@
   overflow: hidden;
 }
 
+.rightColumn {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .centerColumn {
   display: grid;
   gap: 12px;
@@ -820,6 +824,7 @@
   .rightColumn {
     grid-column: 1 / -1;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
     overflow: visible;
   }
 
@@ -860,6 +865,7 @@
 
   .rightColumn {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
   }
 
   .neoMetricsGrid,
