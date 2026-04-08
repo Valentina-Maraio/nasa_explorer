@@ -1,0 +1,25 @@
+.warningBanner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 50%;
+  width: 100vw;
+  text-align: center;
+  color: #ff1f36;
+  font-size: clamp(72px, 14vw, 180px);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 30;
+  text-shadow: 0 0 20px rgba(255, 31, 54, 0.9), 0 0 40px rgba(255, 31, 54, 0.6);
+  animation: warningPulseFade 1.6s ease forwards;
+}
+
+@keyframes warningPulseFade {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.94); }
+  25% { opacity: 1; transform: translateY(-50%) scale(1); }
+  52% { opacity: 0.85; transform: translateY(-50%) scale(1.06); }
+  74% { opacity: 1; transform: translateY(-50%) scale(1.02); }
+  100% { opacity: 0; transform: translateY(-50%) scale(1.1); }
+}
