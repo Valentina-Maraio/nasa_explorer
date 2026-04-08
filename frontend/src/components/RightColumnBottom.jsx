@@ -1,5 +1,6 @@
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { LoadingState } from '../ui/LoadingState';
+import SpaceWeatherPanel from './SpaceWeatherPanel';
 import styles from './styles/RightColumnBottom.module.css';
 
 function RightColumnBottom({
@@ -16,6 +17,7 @@ function RightColumnBottom({
   fetchManifest,
   formatNumber,
   today,
+  spaceWeather,
 }) {
   if (activeTab === 'nasa-media') {
     return (
@@ -35,6 +37,23 @@ function RightColumnBottom({
           <LoadingState message="▸ SELECT A MEDIA RESULT" minHeight="140px" />
         )}
       </section>
+    );
+  }
+
+  if (activeTab === 'live') {
+    return (
+      <SpaceWeatherPanel
+        mars={spaceWeather?.mars}
+        moon={spaceWeather?.moon}
+        marsLoading={spaceWeather?.marsLoading}
+        moonLoading={spaceWeather?.moonLoading}
+        marsError={spaceWeather?.marsError}
+        moonError={spaceWeather?.moonError}
+        marsFromFallback={spaceWeather?.marsFromFallback}
+        moonFromFallback={spaceWeather?.moonFromFallback}
+        retryMars={spaceWeather?.retryMars}
+        retryMoon={spaceWeather?.retryMoon}
+      />
     );
   }
 

@@ -5,6 +5,7 @@ import { useEpic } from '../../hooks/useEpic.js';
 import { useImageSearch } from '../../hooks/useImageSearch.js';
 import { useMarsManifest } from '../../hooks/useMarsManifest.js';
 import { useNeo } from '../../hooks/useNeo.js';
+import { useSpaceWeather } from '../../hooks/useSpaceWeather.js';
 import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
 import CommandHeader from '../../components/CommandHeader.jsx';
 import MediaReconPanel from '../../components/MediaReconPanel.jsx';
@@ -81,6 +82,21 @@ function AresCommandPage({ initialTab = 'apod' }) {
     totalResults: mediaTotalResults,
     handlePageChange: handleMediaPageChange,
   } = useImageSearch('nebula', 6);
+  const {
+    mars: marsWeather,
+    moon: moonWeather,
+    marsLoading: marsWeatherLoading,
+    moonLoading: moonWeatherLoading,
+    marsError: marsWeatherError,
+    moonError: moonWeatherError,
+    marsFromFallback,
+    moonFromFallback,
+    retryMars,
+    retryMoon,
+  } = useSpaceWeather({
+    active: activeTab === 'live',
+    date: today,
+  });
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
@@ -305,13 +321,23 @@ function AresCommandPage({ initialTab = 'apod' }) {
             fetchManifest={fetchManifest}
             formatNumber={formatNumber}
             today={today}
+            spaceWeather={{
+              mars: marsWeather,
+              moon: moonWeather,
+              marsLoading: marsWeatherLoading,
+              moonLoading: moonWeatherLoading,
+              marsError: marsWeatherError,
+              moonError: moonWeatherError,
+              marsFromFallback,
+              moonFromFallback,
+              retryMars,
+              retryMoon,
+            }}
           />
         </aside>
       </div>
 
-      {apodError && apod ? <div className={styles.inlineWarning}>APOD warning: {apodError}</div> : null}
-      {marsError && activeTab !== 'mars' ? <div className={styles.inlineWarning}>Mars warning: {marsError}</div> : null}
-      {mediaError && activeTab !== 'nasa-media' ? <div className={styles.inlineWarning}>Media warning: {mediaError}</div> : null}
+      <div className={styles.inlineWarning}>Per Aspera Ad Astra</div>
     </div>
   );
 }

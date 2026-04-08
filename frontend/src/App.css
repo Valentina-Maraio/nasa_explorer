@@ -33,11 +33,10 @@ body {
 }
 
 .glow-border {
-  border: 2px solid #d8dce2;
+  border: 2px solid #e2dfd8;
 }
 
 .dashboard-panel {
-  background: var(--panel-bg);
   border: 2px solid #d8dce2;
   border-radius: 4px;
   padding: 16px;

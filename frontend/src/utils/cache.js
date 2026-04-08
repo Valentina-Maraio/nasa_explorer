@@ -8,6 +8,7 @@ export const TTL = {
   NEO: 60 * 60 * 1000,
   EPIC: 6 * 60 * 60 * 1000,
   MARS_MANIFEST: 6 * 60 * 60 * 1000,
+  WEATHER_FALLBACK: 15 * 60 * 1000,
 };
 
 export function cacheSet(key, data, ttlMs) {

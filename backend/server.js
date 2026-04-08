@@ -8,6 +8,7 @@ const epicRoutes = require('./routes/epicRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const marsRoutes = require('./routes/marsRoutes');
 const neoRoutes = require('./routes/neoRoutes');
+const weatherRoutes = require('./routes/weatherRoutes');
 const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
 const AppError = require('./utils/AppError');
@@ -63,6 +64,7 @@ app.use('/api/epic', epicRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/mars', marsRoutes);
 app.use('/api/neo', neoRoutes);
+app.use('/api/weather', weatherRoutes);
 
 app.use((req, res, next) => {
   next(new AppError('Route not found', 404, 'NOT_FOUND', true));

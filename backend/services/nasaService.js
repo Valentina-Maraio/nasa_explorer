@@ -93,6 +93,76 @@ async function fetchMarsManifest(rover = 'curiosity') {
   }
 }
 
+async function fetchMarsWeather(date) {
+  const apiKey = getApiKey();
+
+  const requestConfigs = [
+    {
+      url: 'https://api.nasa.gov/insight_weather/',
+      params: {
+        api_key: apiKey,
+        feedtype: 'json',
+        ver: '1.0',
+      },
+    },
+    {
+      url: 'https://api.nasa.gov/insight_weather/',
+      params: {
+        api_key: apiKey,
+      },
+    },
+  ];
+
+  let lastError = null;
+
+  for (const config of requestConfigs) {
+    try {
+      const response = await client.get(config.url, {
+        params: config.params,
+      });
+      return response.data;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (date) {
+    throw mapAxiosError(lastError, 'Failed to fetch Mars weather data for requested date');
+  }
+
+  throw mapAxiosError(lastError, 'Failed to fetch Mars weather data');
+}
+
+async function fetchMoonWeatherProxy(date) {
+  const targetDate = date || new Date().toISOString().split('T')[0];
+  const maxLookbackDays = 7;
+
+  for (let index = 0; index <= maxLookbackDays; index += 1) {
+    const candidateDate = new Date(`${targetDate}T00:00:00Z`);
+    candidateDate.setUTCDate(candidateDate.getUTCDate() - index);
+    const isoDate = candidateDate.toISOString().split('T')[0];
+
+    try {
+      const data = await fetchEpicNatural(isoDate);
+      if (Array.isArray(data) && data.length > 0) {
+        return {
+          date: isoDate,
+          items: data,
+        };
+      }
+    } catch (error) {
+      if (index === maxLookbackDays) {
+        throw mapAxiosError(error, 'Failed to fetch Moon proxy telemetry');
+      }
+    }
+  }
+
+  return {
+    date: targetDate,
+    items: [],
+  };
+}
+
 async function searchImages({ q, page, page_size }) {
   try {
     const response = await client.get('https://images-api.nasa.gov/search', {
@@ -128,6 +198,8 @@ module.exports = {
   fetchNeoFeed,
   fetchEpicNatural,
   fetchMarsManifest,
+  fetchMarsWeather,
+  fetchMoonWeatherProxy,
   searchImages,
   fetchAsset,
   fetchMetadata,
