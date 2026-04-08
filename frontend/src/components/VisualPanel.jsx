@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { LoadingState } from '../../ui/LoadingState';
-import sharedStyles from '../../../style/ares/shared.module.css';
-import visualStyles from '../../../style/ares/visual.module.css';
-import styles from '../../../style/ares/VisualPanel.module.css';
+import { LoadingState } from '../ui/LoadingState';
+import styles from './styles/VisualPanel.module.css';
 
 function VisualPanel({
   activeTab,
@@ -22,25 +20,25 @@ function VisualPanel({
 
   return (
     <>
-      <div className={`dashboard-panel ${visualStyles.visualPanel}`}>
-        <div className={visualStyles.visualHeader}>
-          <div className={sharedStyles.panelHeading}>VISUAL RECONNAISSANCE</div>
-          <div className={visualStyles.feedBadges}>
-            <span className={visualStyles.feedBadge}>REC</span>
-            <span className={visualStyles.feedBadgeMuted}>CAM-04</span>
+      <div className={`dashboard-panel ${styles.visualPanel}`}>
+        <div className={styles.visualHeader}>
+          <div className={styles.panelHeading}>VISUAL RECONNAISSANCE</div>
+          <div className={styles.feedBadges}>
+            <span className={styles.feedBadge}>REC</span>
+            <span className={styles.feedBadgeMuted}>CAM-04</span>
           </div>
         </div>
 
-        <div className={visualStyles.visualStage}>
+        <div className={styles.visualStage}>
           {apodLoading && !apod ? (
             <LoadingState message="▸ ACQUIRING VISUAL FEED..." minHeight="100%" />
           ) : primaryFeed ? (
             <>
               {primaryFeed.type === 'video' ? (
-                <iframe title={primaryFeed.title} src={primaryFeed.url} className={visualStyles.visualMedia} />
+                <iframe title={primaryFeed.title} src={primaryFeed.url} className={styles.visualMedia} />
               ) : (
                 <div
-                  className={visualStyles.visualBackgroundImage}
+                  className={styles.visualBackgroundImage}
                   style={{ backgroundImage: `url(${primaryFeed.url})` }}
                   role="img"
                   aria-label={primaryFeed.title}
@@ -49,7 +47,7 @@ function VisualPanel({
 
               <button
                 type="button"
-                className={visualStyles.apodInfoButton}
+                className={styles.apodInfoButton}
                 onClick={() => setIsApodDialogOpen(true)}
                 aria-label="Open image description"
                 title="Open image description"
@@ -58,14 +56,14 @@ function VisualPanel({
                 i
               </button>
 
-              <div className={visualStyles.crosshairVertical} aria-hidden="true" />
-              <div className={visualStyles.crosshairHorizontal} aria-hidden="true" />
-              <div className={visualStyles.crosshairCore} aria-hidden="true" />
-              <div className={visualStyles.visualDataTopLeft}>
+              <div className={styles.crosshairVertical} aria-hidden="true" />
+              <div className={styles.crosshairHorizontal} aria-hidden="true" />
+              <div className={styles.crosshairCore} aria-hidden="true" />
+              <div className={styles.visualDataTopLeft}>
                 <span>COORD: {epic?.leadImage?.centroidCoordinates ? `${epic.leadImage.centroidCoordinates.lat.toFixed(2)}°, ${epic.leadImage.centroidCoordinates.lon.toFixed(2)}°` : 'SYNCING'}</span>
                 <span>DATE: {apod?.date || today}</span>
               </div>
-              <div className={visualStyles.visualDataBottomRight}>
+              <div className={styles.visualDataBottomRight}>
                 <span>MAG: {formatNumber(neo?.closestObject?.absoluteMagnitude, 1)}</span>
                 <span>FILTER: {(apod?.media_type || 'IMAGE').toUpperCase()}</span>
               </div>
@@ -75,7 +73,7 @@ function VisualPanel({
           )}
         </div>
 
-        <div className={visualStyles.visualCaption}>
+        <div className={styles.visualCaption}>
           <h3>{primaryFeed?.title || 'Awaiting telemetry feed'}</h3>
           <p>{primaryFeed?.subtitle || 'Telemetry will populate as NASA sources respond.'}</p>
         </div>
@@ -83,22 +81,22 @@ function VisualPanel({
 
 
       {isApodDialogOpen && apod?.explanation ? (
-        <div className={visualStyles.apodDialogOverlay} onClick={() => setIsApodDialogOpen(false)}>
-          <div className={visualStyles.apodDialog} onClick={(event) => event.stopPropagation()}>
-            <div className={visualStyles.apodDialogHeader}>
+        <div className={styles.apodDialogOverlay} onClick={() => setIsApodDialogOpen(false)}>
+          <div className={styles.apodDialog} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.apodDialogHeader}>
               <h3>{apod.title}</h3>
               <button
                 type="button"
-                className={visualStyles.apodDialogClose}
+                className={styles.apodDialogClose}
                 onClick={() => setIsApodDialogOpen(false)}
                 aria-label="Close image description"
               >
                 x
               </button>
             </div>
-            <p className={visualStyles.apodDialogText}>{apod.explanation}</p>
+            <p className={styles.apodDialogText}>{apod.explanation}</p>
             {hasBackgroundImage ? null : (
-              <p className={visualStyles.apodDialogNote}>Description is shown in dialog while video feed remains embedded in panel.</p>
+              <p className={styles.apodDialogNote}>Description is shown in dialog while video feed remains embedded in panel.</p>
             )}
           </div>
         </div>
@@ -106,7 +104,7 @@ function VisualPanel({
 
       {activeTab === 'neo' ? (
         <div className={`dashboard-panel ${styles.detailPanel}`}>
-          <div className={sharedStyles.panelHeading}>NEO LOG ANALYSIS</div>
+          <div className={styles.panelHeading}>NEO LOG ANALYSIS</div>
           <div className={styles.neoMetricsGrid}>
             <div className={styles.metricCard}><span>HAZARDOUS</span><strong>{formatNumber(neo?.hazardousCount)}</strong></div>
             <div className={styles.metricCard}><span>SAFE PASS</span><strong>{formatNumber((neo?.elementCount || 0) - (neo?.hazardousCount || 0))}</strong></div>
@@ -117,7 +115,7 @@ function VisualPanel({
 
       {activeTab === 'mars' ? (
         <div className={`dashboard-panel ${styles.detailPanel}`}>
-          <div className={sharedStyles.panelHeading}>MARS RECON DETAILS</div>
+          <div className={styles.panelHeading}>MARS RECON DETAILS</div>
           {manifest ? (
             <div className={styles.marsGrid}>
               <div className={styles.metricCard}><span>STATUS</span><strong>{manifest.status?.toUpperCase() || '--'}</strong></div>

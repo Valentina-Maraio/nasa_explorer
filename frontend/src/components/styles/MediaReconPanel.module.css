@@ -1,3 +1,46 @@
+.visualPanel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+  margin-bottom: 8px;
+}
+
+.visualHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.feedBadges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.feedBadge,
+.feedBadgeMuted {
+  padding: 5px 8px;
+  font-size: 0.64rem;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.feedBadge {
+  color: #ff6173;
+  background: rgba(255, 97, 115, 0.12);
+}
+
+.feedBadgeMuted {
+  color: rgba(210, 218, 230, 0.8);
+}
+
 .mediaSearchForm {
   display: flex;
   align-items: center;
@@ -157,11 +200,29 @@
 }
 
 @media (max-width: 768px) {
+  .visualHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .mediaCardFooter {
     padding: 6px 7px;
   }
 
   .mediaCardFooter strong {
     font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .feedBadges {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .feedBadge,
+  .feedBadgeMuted {
+    font-size: 0.62rem;
   }
 }

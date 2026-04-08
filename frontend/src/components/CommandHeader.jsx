@@ -1,4 +1,4 @@
-import styles from '../../style/ares/CommandHeader.module.css';
+import styles from './styles/CommandHeader.module.css';
 import CommandTabs from './CommandTabs';
 
 function CommandHeader({ tabs, activeTab, onTabChange, gravityEnabled, onGravityRestore }) {

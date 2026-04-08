@@ -1,3 +1,10 @@
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+  margin-bottom: 8px;
+}
+
 .actionGrid {
   display: grid;
   gap: 8px;
