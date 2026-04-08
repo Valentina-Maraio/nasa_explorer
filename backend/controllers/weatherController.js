@@ -125,10 +125,25 @@ function deriveMoonProxyFromEpic(item) {
 }
 
 async function getMoonWeather(req, res) {
-  const data = await nasaService.fetchMoonWeatherProxy(req.query.date);
+  const days = req.query.days || 7;
+  const data = await nasaService.fetchMoonWeatherProxy(req.query.date, days);
   const latestItem = data.items[0] || null;
+  const history = (Array.isArray(data.history) ? data.history : [])
+    .map((entry) => {
+      const sourceItem = entry?.item || null;
+      if (!sourceItem) {
+        return null;
+      }
 
-  if (!latestItem) {
+      const proxy = deriveMoonProxyFromEpic(sourceItem);
+      return {
+        date: entry.date || (sourceItem.date ? sourceItem.date.split('T')[0] : null),
+        ...proxy,
+      };
+    })
+    .filter(Boolean);
+
+  if (!latestItem && history.length === 0) {
     res.json({
       source: 'NASA EPIC Natural Color Imagery',
       status: 'unavailable',
@@ -138,15 +153,15 @@ async function getMoonWeather(req, res) {
       },
       latest: null,
       proxyMetrics: null,
-      caveats: [
-        'Moon telemetry is proxy-derived from EPIC geometry and is not atmospheric weather.',
-      ],
+      history: [],
       message: 'NO LUNAR PROXY TELEMETRY AVAILABLE',
     });
     return;
   }
 
-  const proxyMetrics = deriveMoonProxyFromEpic(latestItem);
+  const latestHistoryPoint = history[0] || null;
+  const fallbackProxyMetrics = latestItem ? deriveMoonProxyFromEpic(latestItem) : null;
+  const proxyMetrics = latestHistoryPoint || fallbackProxyMetrics;
 
   res.json({
     source: 'NASA EPIC Natural Color Imagery',
@@ -156,13 +171,11 @@ async function getMoonWeather(req, res) {
       distance: 'AU',
     },
     latest: {
-      date: data.date,
-      timestamp: latestItem.date || null,
+      date: latestHistoryPoint?.date || data.date,
+      timestamp: latestHistoryPoint?.timestamp || latestItem?.date || null,
     },
     proxyMetrics,
-    caveats: [
-      'Moon values are proxy-derived from EPIC geometry and should be treated as estimated environmental indicators.',
-    ],
+    history
   });
 }
 

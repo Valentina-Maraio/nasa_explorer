@@ -133,33 +133,44 @@ async function fetchMarsWeather(date) {
   throw mapAxiosError(lastError, 'Failed to fetch Mars weather data');
 }
 
-async function fetchMoonWeatherProxy(date) {
+async function fetchMoonWeatherProxy(date, days = 7) {
   const targetDate = date || new Date().toISOString().split('T')[0];
-  const maxLookbackDays = 7;
+  const desiredPoints = Math.max(1, Math.min(Number(days) || 7, 14));
+  const maxLookbackDays = Math.max(desiredPoints * 3, desiredPoints);
+  const history = [];
+  let latestItems = [];
+  let lastError = null;
 
-  for (let index = 0; index <= maxLookbackDays; index += 1) {
+  for (let index = 0; index < maxLookbackDays && history.length < desiredPoints; index += 1) {
     const candidateDate = new Date(`${targetDate}T00:00:00Z`);
     candidateDate.setUTCDate(candidateDate.getUTCDate() - index);
     const isoDate = candidateDate.toISOString().split('T')[0];
 
     try {
-      const data = await fetchEpicNatural(isoDate);
-      if (Array.isArray(data) && data.length > 0) {
-        return {
+      const items = await fetchEpicNatural(isoDate);
+      if (Array.isArray(items) && items.length > 0) {
+        if (latestItems.length === 0) {
+          latestItems = items;
+        }
+
+        history.push({
           date: isoDate,
-          items: data,
-        };
+          item: items[0],
+        });
       }
     } catch (error) {
-      if (index === maxLookbackDays) {
-        throw mapAxiosError(error, 'Failed to fetch Moon proxy telemetry');
-      }
+      lastError = error;
     }
+  }
+
+  if (history.length === 0 && lastError) {
+    throw mapAxiosError(lastError, 'Failed to fetch Moon proxy telemetry');
   }
 
   return {
     date: targetDate,
-    items: [],
+    items: latestItems,
+    history,
   };
 }
 

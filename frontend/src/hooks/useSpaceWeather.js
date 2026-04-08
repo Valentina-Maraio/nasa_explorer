@@ -53,8 +53,12 @@ export function useSpaceWeather({ active = false, date }) {
     setMoonFromFallback(false);
 
     try {
-      const queryDate = date ? `?date=${encodeURIComponent(date)}` : '';
-      const response = await fetch(buildApiUrl(`/api/weather/moon${queryDate}`));
+      const params = new URLSearchParams({ days: '7' });
+      if (date) {
+        params.set('date', date);
+      }
+
+      const response = await fetch(buildApiUrl(`/api/weather/moon?${params.toString()}`));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

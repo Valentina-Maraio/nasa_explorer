@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { LoadingState } from '../ui/LoadingState';
+import MoonWeatherRadar from './MoonWeatherRadar';
 import styles from './styles/SpaceWeatherPanel.module.css';
 
 function cToF(value) {
@@ -92,7 +93,6 @@ function MoonCard({ units, data, loading, error, fromFallback, onRetry }) {
         <div><span>TIMESTAMP</span><strong>{data?.latest?.timestamp || '--'}</strong></div>
       </div>
       {fromFallback ? <div className={styles.fallbackTag}>FALLBACK CACHE ACTIVE</div> : null}
-      {Array.isArray(data?.caveats) ? <div className={styles.caveat}>{data.caveats[0]}</div> : null}
       {error ? <div className={styles.errorLine}>LUNAR LINK DEGRADED · <button className={styles.retryButton} type="button" onClick={onRetry}>RETRY</button></div> : null}
       {data?.message ? <div className={styles.unavailable}>{data.message}</div> : null}
     </div>
@@ -139,6 +139,14 @@ function SpaceWeatherPanel({
         <MoonCard
           units={units}
           data={moon}
+          loading={moonLoading}
+          error={moonError}
+          fromFallback={moonFromFallback}
+          onRetry={retryMoon}
+        />
+        <MoonWeatherRadar
+          history={Array.isArray(moon?.history) ? moon.history : []}
+          units={units}
           loading={moonLoading}
           error={moonError}
           fromFallback={moonFromFallback}

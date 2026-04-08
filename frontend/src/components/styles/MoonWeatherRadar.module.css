@@ -1,0 +1,150 @@
+.graphCard {
+  border: 1px solid rgba(216, 220, 226, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.graphHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.graphHeading {
+  color: #f6f8fc;
+  letter-spacing: 1px;
+  font-size: 0.78rem;
+}
+
+.graphMode {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+}
+
+.graphWrap {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+}
+
+.radarSvg {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+}
+
+.gridPolygon {
+  fill: none;
+  stroke: rgba(216, 220, 226, 0.14);
+  stroke-width: 1;
+}
+
+.axisLine {
+  stroke: rgba(216, 220, 226, 0.24);
+  stroke-width: 1;
+}
+
+.axisLabel {
+  fill: rgba(255, 255, 255, 0.58);
+  font-size: 8px;
+  letter-spacing: 0.5px;
+}
+
+.tempPolygon {
+  fill: rgba(255, 138, 0, 0.2);
+  stroke: rgba(255, 138, 0, 0.88);
+  stroke-width: 1.4;
+}
+
+.lunarPolygon {
+  fill: rgba(125, 201, 255, 0.16);
+  stroke: rgba(125, 201, 255, 0.9);
+  stroke-width: 1.4;
+}
+
+.solarPolygon {
+  fill: rgba(245, 208, 106, 0.12);
+  stroke: rgba(245, 208, 106, 0.9);
+  stroke-width: 1.4;
+}
+
+.centerDot {
+  fill: #e9edf4;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+
+.legend span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 14px;
+  height: 2px;
+  display: inline-block;
+}
+
+.legendTemp {
+  background: rgba(255, 138, 0, 0.9);
+}
+
+.legendLunar {
+  background: rgba(125, 201, 255, 0.9);
+}
+
+.legendSolar {
+  background: rgba(245, 208, 106, 0.9);
+}
+
+.metricsRow {
+  display: grid;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+}
+
+.fallbackTag {
+  border: 1px dashed rgba(255, 179, 71, 0.6);
+  color: rgba(255, 179, 71, 0.95);
+  background: rgba(255, 179, 71, 0.08);
+  padding: 4px 6px;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+}
+
+.errorLine {
+  color: rgba(255, 132, 132, 0.95);
+  font-size: 0.64rem;
+  letter-spacing: 1px;
+}
+
+.inlineRetry,
+.retryButton {
+  border: 1px solid rgba(255, 132, 132, 0.6);
+  background: transparent;
+  color: rgba(255, 132, 132, 1);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.unavailable {
+  color: rgba(255, 106, 106, 0.95);
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+}
