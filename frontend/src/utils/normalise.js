@@ -1,5 +1,3 @@
-// Normalise APOD response data.
-
 export function normaliseApodData(data) {
   if (!data) return null;
   
@@ -13,8 +11,6 @@ export function normaliseApodData(data) {
     hdurl: data.hdurl || null,
   };
 }
-
-// Normalise NASA image search response data.
 
 export function normaliseImageSearch(data) {
   if (!data || !data.collection || !data.collection.items) {
@@ -40,8 +36,6 @@ export function normaliseImageSearch(data) {
     currentPage: parseInt(links.find(link => link.rel === 'self')?.href?.split('page=')[1]?.split('&')[0] || '1'),
   };
 }
-
-// Normalise asset files response
 
 export function normaliseAssetFiles(data) {
   if (!data || !data.collection || !data.collection.items) {
