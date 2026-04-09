@@ -1,0 +1,142 @@
+.card {
+  border: 1px solid rgba(216, 220, 226, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  grid-row: span 2;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardHeader strong {
+  color: #f6f8fc;
+  letter-spacing: 1px;
+  font-size: 0.78rem;
+}
+
+.badge {
+  background: rgba(255, 179, 71, 0.15);
+  color: rgba(255, 179, 71, 0.95);
+  padding: 3px 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+}
+
+.graphContainer {
+  padding: 4px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(216, 220, 226, 0.1);
+}
+
+.tooltipContainer {
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(216, 220, 226, 0.3);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+.tooltipClass {
+  color: #ffb347;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.tooltipInfo {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(216, 220, 226, 0.3) rgba(255, 255, 255, 0.05);
+}
+
+.noData {
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 20px;
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(216, 220, 226, 0.08);
+}
+
+.timelineItem:last-child {
+  border-bottom: none;
+}
+
+.timelineDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.timelineContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.eventHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.eventClass {
+  color: #ffb347;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.eventDate {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.64rem;
+}
+
+.eventDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.66rem;
+}
+
+.eventTime,
+.eventLocation,
+.eventRegion {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.eventRegion {
+  color: rgba(255, 179, 71, 0.8);
+}

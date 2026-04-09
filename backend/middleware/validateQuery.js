@@ -40,9 +40,9 @@ const validateWeatherQuery = [
   validateRequest,
 ];
 
-const validateNeoRangeQuery = [
-  query('start_date').optional().isISO8601().withMessage('start_date must be ISO 8601'),
-  query('end_date').optional().isISO8601().withMessage('end_date must be ISO 8601'),
+const validateSolarQuery = [
+  query('startDate').optional().isISO8601().withMessage('startDate must be ISO 8601'),
+  query('endDate').optional().isISO8601().withMessage('endDate must be ISO 8601'),
   validateRequest,
 ];
 
@@ -52,5 +52,5 @@ module.exports = {
   validateImageSearchQuery,
   validateNasaIdQuery,
   validateWeatherQuery,
-  validateNeoRangeQuery,
+  validateSolarQuery,
 };

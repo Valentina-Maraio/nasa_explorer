@@ -1,0 +1,94 @@
+.card {
+  border: 1px solid rgba(216, 220, 226, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardHeader strong {
+  color: #f6f8fc;
+  letter-spacing: 1px;
+  font-size: 0.78rem;
+}
+
+.badge {
+  background: rgba(255, 179, 71, 0.15);
+  color: rgba(255, 179, 71, 0.95);
+  padding: 3px 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+}
+
+.regionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(216, 220, 226, 0.3) rgba(255, 255, 255, 0.05);
+}
+
+.noData {
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 20px;
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+}
+
+.regionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.regionLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.regionNumber {
+  color: rgba(255, 179, 71, 0.9);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.regionCount {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.regionBar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.regionBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 179, 71, 0.6), rgba(255, 179, 71, 0.9));
+  transition: width 0.3s ease;
+}
+
+.regionClass {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.64rem;
+  letter-spacing: 0.5px;
+}

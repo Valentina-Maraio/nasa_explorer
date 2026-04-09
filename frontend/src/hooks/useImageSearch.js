@@ -3,14 +3,7 @@ import { normaliseImageSearch, normaliseAssetFiles } from '../utils/normalise';
 import { buildApiUrl } from '../utils/apiUrl';
 import { cacheGet, cacheSet, cacheKey, TTL } from '../utils/cache';
 
-/**
- * Custom hook for searching NASA media library and loading asset details
- * @param {string} initialQuery - Initial search query
- * @param {number} pageSize - Number of results per page
- * @returns {Object} { query, results, loading, selectedAsset, assetFiles, metadata, error, handleQueryChange, handleSubmit, loadAsset, currentPage, totalPages, handlePageChange }
- */
 export function useImageSearch(initialQuery = 'moon', pageSize = 20) {
-  // Use a ref so searchMedia always reads the latest pageSize without being a callback dep
   const pageSizeRef = useRef(pageSize);
   pageSizeRef.current = pageSize;
 
@@ -202,13 +195,11 @@ export function useImageSearch(initialQuery = 'moon', pageSize = 20) {
     }
   }, [query, searchMedia, totalPages]);
 
-  // Perform initial search on mount
   useEffect(() => {
     setQuery(initialQuery);
     searchMedia(initialQuery, 1);
   }, [searchMedia, initialQuery]);
 
-  // Re-search at page 1 when pageSize changes (skip if value hasn't changed)
   const prevPageSizeRef = useRef(pageSize);
   const queryRef = useRef(query);
   queryRef.current = query;
