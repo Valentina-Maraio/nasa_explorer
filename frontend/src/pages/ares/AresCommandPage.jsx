@@ -3,13 +3,15 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEpic } from '../../hooks/useEpic.js';
 import { useImageSearch } from '../../hooks/useImageSearch.js';
 import { useSpaceWeather } from '../../hooks/useSpaceWeather.js';
+import { useSolarFlares } from '../../hooks/useSolarFlares.js';
 import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
 import CommandHeader from '../../components/CommandHeader.jsx';
 import MediaReconPanel from '../../components/MediaReconPanel.jsx';
 import LivePanel from '../../components/LivePanel.jsx';
+import SolarPage from '../../components/SolarPage.jsx';
 import RightColumnBottom from '../../components/RightColumnBottom.jsx';
 import TacticalOverrides from '../../components/TacticalOverrides.jsx';
-import TelemetryColumn from '../../components/TelemetryColumn.jsx';
+import SolarMetrics from '../../components/SolarMetrics.jsx';
 import {
   MotionOverlay,
   WarningBanner,
@@ -84,6 +86,16 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
   } = useSpaceWeather({
     active: activeTab === 'live',
     date: today,
+  });
+
+  const {
+    data: solarFlares,
+    loading: solarLoading,
+    error: solarError,
+    fromFallback: solarFromFallback,
+    retry: retrySolar,
+  } = useSolarFlares({
+    active: activeTab === 'solar',
   });
 
   useEffect(() => {
@@ -197,34 +209,42 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
       />
 
       <div className={styles.commandGrid}>
-        <TelemetryColumn
-          formatNumber={formatNumber}
-        />
-
         <section className={styles.centerColumn}>
           {activeTab === 'live'
             ? <LivePanel />
-            : activeTab === 'nasa-media'
+            : activeTab === 'solar'
               ? (
-                  <MediaReconPanel
-                    mediaQuery={mediaQuery}
-                    mediaResults={mediaResults}
-                    mediaLoading={mediaLoading}
-                    selectedMediaAsset={selectedMediaAsset}
-                    mediaError={mediaError}
-                    mediaAssetFiles={mediaAssetFiles}
-                    handleMediaQueryChange={handleMediaQueryChange}
-                    handleMediaSubmit={handleMediaSubmit}
-                    handleMediaSelect={handleMediaSelect}
-                    searchMedia={searchMedia}
-                    mediaCurrentPage={mediaCurrentPage}
-                    mediaTotalPages={mediaTotalPages}
-                    mediaTotalResults={mediaTotalResults}
-                    handleMediaPageChange={handleMediaPageChange}
-                    formatNumber={formatNumber}
+                  <SolarPage
+                    solarFlares={{
+                      data: solarFlares,
+                      loading: solarLoading,
+                      error: solarError,
+                      fromFallback: solarFromFallback,
+                      retry: retrySolar,
+                    }}
                   />
                 )
-                : ''}
+              : activeTab === 'nasa-media'
+                ? (
+                    <MediaReconPanel
+                      mediaQuery={mediaQuery}
+                      mediaResults={mediaResults}
+                      mediaLoading={mediaLoading}
+                      selectedMediaAsset={selectedMediaAsset}
+                      mediaError={mediaError}
+                      mediaAssetFiles={mediaAssetFiles}
+                      handleMediaQueryChange={handleMediaQueryChange}
+                      handleMediaSubmit={handleMediaSubmit}
+                      handleMediaSelect={handleMediaSelect}
+                      searchMedia={searchMedia}
+                      mediaCurrentPage={mediaCurrentPage}
+                      mediaTotalPages={mediaTotalPages}
+                      mediaTotalResults={mediaTotalResults}
+                      handleMediaPageChange={handleMediaPageChange}
+                      formatNumber={formatNumber}
+                    />
+                  )
+                  : ''}
         </section>
 
         <aside className={styles.rightColumn}>
@@ -232,8 +252,20 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
             setActiveTabAndRoute={setActiveTabAndRoute}
             onDangerTrigger={handleDangerTrigger}
             dangerDisabled={dangerLocked}
-            isNasaMediaPage={activeTab === 'nasa-media' || activeTab === 'live'}
+            isNasaMediaPage={activeTab === 'nasa-media' || activeTab === 'live' || activeTab === 'solar'}
           />
+
+          {activeTab === 'solar' && (
+            <SolarMetrics
+              solarFlares={{
+                data: solarFlares,
+                loading: solarLoading,
+                error: solarError,
+                fromFallback: solarFromFallback,
+                retry: retrySolar,
+              }}
+            />
+          )}
 
           <RightColumnBottom
             activeTab={activeTab}

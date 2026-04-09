@@ -1,0 +1,84 @@
+.solarPanel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panelHeading {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: rgba(255, 179, 71, 0.88);
+}
+
+.status {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+}
+
+.fallbackBanner {
+  border: 1px dashed rgba(255, 179, 71, 0.6);
+  color: rgba(255, 179, 71, 0.95);
+  background: rgba(255, 179, 71, 0.08);
+  padding: 6px 8px;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.errorBanner {
+  border: 1px solid rgba(255, 71, 71, 0.5);
+  color: rgba(255, 71, 71, 0.95);
+  background: rgba(255, 71, 71, 0.1);
+  padding: 6px 8px;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.retryButton {
+  background: transparent;
+  border: none;
+  color: rgba(255, 179, 71, 0.95);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  padding: 0;
+}
+
+.retryButton:hover {
+  color: rgba(255, 179, 71, 1);
+}
+
+.unavailable {
+  border: 1px solid rgba(216, 220, 226, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 16px;
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
+  gap: 8px;
+  min-height: 0;
+}
+
+@media (max-width: 1024px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
