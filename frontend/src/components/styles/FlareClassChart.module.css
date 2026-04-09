@@ -1,0 +1,48 @@
+.card {
+  border: 1px solid rgba(216, 220, 226, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardHeader strong {
+  color: #f6f8fc;
+  letter-spacing: 1px;
+  font-size: 0.78rem;
+}
+
+.chartContainer {
+  padding: 8px 4px;
+  min-height: 200px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(216, 220, 226, 0.1);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.66rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

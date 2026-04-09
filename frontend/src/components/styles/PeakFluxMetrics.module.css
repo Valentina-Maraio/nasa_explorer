@@ -1,0 +1,78 @@
+.card {
+  border: 1px solid rgba(216, 220, 226, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardHeader strong {
+  color: #f6f8fc;
+  letter-spacing: 1px;
+  font-size: 0.78rem;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.66rem;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  color: #f4f7fb;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(216, 220, 226, 0.15);
+  margin: 4px 0;
+}
+
+.latestEvent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.eventLabel {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.64rem;
+  letter-spacing: 1px;
+}
+
+.eventClass {
+  color: #ff9933;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.eventTime,
+.eventLocation {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.68rem;
+}

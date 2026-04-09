@@ -179,7 +179,72 @@ async function getMoonWeather(req, res) {
   });
 }
 
+function normalizeSolarFlareEntry(flare) {
+  if (!flare || typeof flare !== 'object') {
+    return null;
+  }
+
+  return {
+    flrID: flare.flrID || null,
+    beginTime: flare.beginTime || null,
+    peakTime: flare.peakTime || null,
+    endTime: flare.endTime || null,
+    classType: flare.classType || null,
+    sourceLocation: flare.sourceLocation || null,
+    activeRegionNum: flare.activeRegionNum || null,
+    linkedEvents: flare.linkedEvents || null,
+  };
+}
+
+async function getSolarFlares(req, res) {
+  const { startDate, endDate } = req.query;
+  const data = await nasaService.fetchSolarFlares(startDate, endDate);
+  
+  const events = Array.isArray(data) 
+    ? data.map(normalizeSolarFlareEntry).filter(Boolean)
+    : [];
+
+  // Build summary statistics
+  const summary = {
+    total: events.length,
+    byClass: {},
+  };
+
+  events.forEach((event) => {
+    if (event.classType) {
+      const classLetter = event.classType.charAt(0);
+      summary.byClass[classLetter] = (summary.byClass[classLetter] || 0) + 1;
+    }
+  });
+
+  const latest = events.length > 0 ? events[events.length - 1] : null;
+
+  if (events.length === 0) {
+    res.json({
+      source: 'NASA DONKI Solar Flare Database',
+      status: 'unavailable',
+      latest: null,
+      events: [],
+      summary: {
+        total: 0,
+        byClass: {},
+      },
+      message: 'NO SOLAR FLARE DATA AVAILABLE FOR DATE RANGE',
+    });
+    return;
+  }
+
+  res.json({
+    source: 'NASA DONKI Solar Flare Database',
+    status: 'ok',
+    latest,
+    events,
+    summary,
+  });
+}
+
 module.exports = {
   getMarsWeather,
   getMoonWeather,
+  getSolarFlares,
 };

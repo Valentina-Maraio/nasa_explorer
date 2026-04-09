@@ -40,10 +40,17 @@ const validateWeatherQuery = [
   validateRequest,
 ];
 
+const validateSolarQuery = [
+  query('startDate').optional().isISO8601().withMessage('startDate must be ISO 8601'),
+  query('endDate').optional().isISO8601().withMessage('endDate must be ISO 8601'),
+  validateRequest,
+];
+
 module.exports = {
   validateApodQuery,
   validateDateQuery,
   validateImageSearchQuery,
   validateNasaIdQuery,
   validateWeatherQuery,
+  validateSolarQuery,
 };
