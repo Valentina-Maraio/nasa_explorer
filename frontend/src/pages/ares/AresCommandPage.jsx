@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import {useApod} from '../../hooks/useApod.js';
 import { useEpic } from '../../hooks/useEpic.js';
 import { useImageSearch } from '../../hooks/useImageSearch.js';
 import { useMarsManifest } from '../../hooks/useMarsManifest.js';
 import { useNeo } from '../../hooks/useNeo.js';
+import { useNeoRange } from '../../hooks/useNeoRange.js';
 import { useSpaceWeather } from '../../hooks/useSpaceWeather.js';
 import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
 import CommandHeader from '../../components/CommandHeader.jsx';
@@ -13,7 +13,6 @@ import LivePanel from '../../components/LivePanel.jsx';
 import RightColumnBottom from '../../components/RightColumnBottom.jsx';
 import TacticalOverrides from '../../components/TacticalOverrides.jsx';
 import TelemetryColumn from '../../components/TelemetryColumn.jsx';
-import VisualPanel from '../../components/VisualPanel.jsx';
 import {
   MotionOverlay,
   WarningBanner,
@@ -21,14 +20,16 @@ import {
   useAnimationSequence,
   useTriggerAnimation,
 } from '../../animation/index.js';
+import NeoPanel from '../../components/NeoPanel.jsx';
 import { TABS, getRouteForTab, resolveInitialTab } from '../config/tabs.js'
-import { formatCountdown, formatNumber } from '../utils/formatters.js';
+import { formatCountdown, formatNumber } from '../../utils/formatters.js';
 import styles from './style/AresCommandPage.module.css';
-import roverImage from '../../assets/rover.png';
-import buttonImage from '../../assets/button_img.jpg';
-import pressedButtonImage from '../../assets/pressed_btn.jpeg';
+import roverImage from '../../assets/cat_start.gif';
+import roverStopImage from '../../assets/cat_stop.png';
+import buttonImage from '../../assets/gravity_ON.png';
+import pressedButtonImage from '../../assets/gravity_off.png';
 
-function AresCommandPage({ initialTab = 'apod' }) {
+function AresCommandPage({ initialTab = 'nasa-media' }) {
   const roverRef = useRef(null);
   const buttonRef = useRef(null);
   const navigate = useNavigate();
@@ -37,7 +38,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
   const today = new Date().toISOString().split('T')[0];
   const resolvedTab = resolveInitialTab(tab || initialTab);
   const [activeTab, setActiveTab] = useState(resolvedTab);
-  const [selectedApodDate, setSelectedApodDate] = useState(today);
   const [now, setNow] = useState(Date.now());
   const [dangerLocked, setDangerLocked] = useState(false);
   const [isTriggeredFloating, setIsTriggeredFloating] = useState(false);
@@ -46,6 +46,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
   const [motionVisible, setMotionVisible] = useState(false);
   const [roverTransitionMs, setRoverTransitionMs] = useState(0);
   const [buttonTransitionMs, setButtonTransitionMs] = useState(0);
+  const [roverPaused, setRoverPaused] = useState(false);
   const {
     timeoutIdsRef,
     rafIdsRef,
@@ -57,9 +58,14 @@ function AresCommandPage({ initialTab = 'apod' }) {
     calculateAnimationLayout,
   } = useAnimationLayout({ roverRef, buttonRef, motionVisible });
 
-  const { data: apod, loading: apodLoading, error: apodError, fetchApod } = useApod(today);
   const { data: epic, loading: epicLoading, error: epicError, fetchEpic } = useEpic(today);
   const { data: neo, loading: neoLoading, error: neoError, fetchNeo } = useNeo(today);
+  const {
+    data: neoRangeData,
+    loading: neoRangeLoading,
+    error: neoRangeError,
+    retry: retryNeoRange,
+  } = useNeoRange(7);
   const {
     data: manifest,
     loading: marsLoading,
@@ -114,6 +120,7 @@ function AresCommandPage({ initialTab = 'apod' }) {
     setWarningVisible,
     setButtonPressed,
     setMotionVisible,
+    setRoverPaused,
     setRoverTransitionMs,
     setButtonTransitionMs,
     setAnimationLayout,
@@ -154,19 +161,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
     [missionLog],
   );
 
-  const primaryFeed = useMemo(() => {
-    if (!apod) {
-      return null;
-    }
-
-    return {
-      type: apod.media_type,
-      url: apod.url,
-      title: apod.title,
-      subtitle: apod.date,
-    };
-  }, [apod]);
-
   const selectedMediaItem = useMemo(
     () => mediaResults.find((item) => item.nasa_id === selectedMediaAsset) || null,
     [mediaResults, selectedMediaAsset],
@@ -187,17 +181,9 @@ function AresCommandPage({ initialTab = 'apod' }) {
     : '00:00:00';
 
   const retryAll = () => {
-    fetchApod(today);
     fetchEpic(today);
     fetchNeo(today);
     fetchManifest('curiosity');
-  };
-
-  const showGlobalError = !apod && !epic && !neo && !manifest && (apodError || epicError || neoError || marsError);
-
-  const handleApodSubmit = (event) => {
-    event.preventDefault();
-    fetchApod(selectedApodDate);
   };
 
   const handleMediaSelect = (nasaId) => {
@@ -218,20 +204,21 @@ function AresCommandPage({ initialTab = 'apod' }) {
 
   return (
     <div className={styles.page}>
-      <MotionOverlay
-        motionVisible={motionVisible}
-        roverRef={roverRef}
-        buttonRef={buttonRef}
-        roverImage={roverImage}
-        buttonImage={buttonImage}
-        pressedButtonImage={pressedButtonImage}
-        buttonPressed={buttonPressed}
-        onRoverLoad={handleMotionAssetLoad}
-        onButtonLoad={handleMotionAssetLoad}
-        animationLayout={animationLayout}
-        roverTransitionMs={roverTransitionMs}
-        buttonTransitionMs={buttonTransitionMs}
-      />
+
+        <MotionOverlay
+          motionVisible={motionVisible}
+          roverRef={roverRef}
+          buttonRef={buttonRef}
+          roverImage={roverPaused ? roverStopImage : roverImage}
+          buttonImage={buttonImage}
+          pressedButtonImage={pressedButtonImage}
+          buttonPressed={buttonPressed}
+          onRoverLoad={handleMotionAssetLoad}
+          onButtonLoad={handleMotionAssetLoad}
+          animationLayout={animationLayout}
+          roverTransitionMs={roverTransitionMs}
+          buttonTransitionMs={buttonTransitionMs}
+        />
 
       <WarningBanner visible={warningVisible} />
 
@@ -242,8 +229,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
         gravityEnabled={isTriggeredFloating}
         onGravityRestore={handleGravityRestore}
       />
-
-      {showGlobalError ? <ErrorMessage message={apodError || epicError || neoError || marsError} onRetry={retryAll} /> : null}
 
       <div className={styles.commandGrid}>
         <TelemetryColumn
@@ -256,42 +241,38 @@ function AresCommandPage({ initialTab = 'apod' }) {
         />
 
         <section className={styles.centerColumn}>
-          {activeTab === 'live'
-            ? <LivePanel />
-            : activeTab === 'nasa-media'
-              ? (
-                <MediaReconPanel
-                  mediaQuery={mediaQuery}
-                  mediaResults={mediaResults}
-                  mediaLoading={mediaLoading}
-                  selectedMediaAsset={selectedMediaAsset}
-                  mediaError={mediaError}
-                  handleMediaQueryChange={handleMediaQueryChange}
-                  handleMediaSubmit={handleMediaSubmit}
-                  handleMediaSelect={handleMediaSelect}
-                  searchMedia={searchMedia}
-                  mediaCurrentPage={mediaCurrentPage}
-                  mediaTotalPages={mediaTotalPages}
-                  mediaTotalResults={mediaTotalResults}
-                  handleMediaPageChange={handleMediaPageChange}
-                  formatNumber={formatNumber}
-                />
-              )
-              : (
-                <VisualPanel
-                  activeTab={activeTab}
-                  apod={apod}
-                  apodLoading={apodLoading}
-                  apodError={apodError}
-                  epic={epic}
-                  neo={neo}
-                  manifest={manifest}
-                  today={today}
-                  primaryFeed={primaryFeed}
-                  fetchApod={fetchApod}
-                  formatNumber={formatNumber}
-                />
-              )}
+          {activeTab === 'neo'
+            ? (
+              <NeoPanel
+                data={neoRangeData}
+                loading={neoRangeLoading}
+                error={neoRangeError}
+                retry={retryNeoRange}
+              />
+            )
+            : activeTab === 'live'
+              ? <LivePanel />
+              : activeTab === 'nasa-media'
+                ? (
+                  <MediaReconPanel
+                    mediaQuery={mediaQuery}
+                    mediaResults={mediaResults}
+                    mediaLoading={mediaLoading}
+                    selectedMediaAsset={selectedMediaAsset}
+                    mediaError={mediaError}
+                    mediaAssetFiles={mediaAssetFiles}
+                    handleMediaQueryChange={handleMediaQueryChange}
+                    handleMediaSubmit={handleMediaSubmit}
+                    handleMediaSelect={handleMediaSelect}
+                    searchMedia={searchMedia}
+                    mediaCurrentPage={mediaCurrentPage}
+                    mediaTotalPages={mediaTotalPages}
+                    mediaTotalResults={mediaTotalResults}
+                    handleMediaPageChange={handleMediaPageChange}
+                    formatNumber={formatNumber}
+                  />
+                )
+                : ''}
         </section>
 
         <aside className={styles.rightColumn}>
@@ -299,11 +280,6 @@ function AresCommandPage({ initialTab = 'apod' }) {
             setActiveTabAndRoute={setActiveTabAndRoute}
             onDangerTrigger={handleDangerTrigger}
             dangerDisabled={dangerLocked}
-            selectedApodDate={selectedApodDate}
-            setSelectedApodDate={setSelectedApodDate}
-            handleApodSubmit={handleApodSubmit}
-            apodLoading={apodLoading}
-            today={today}
             isNasaMediaPage={activeTab === 'nasa-media' || activeTab === 'live'}
           />
 

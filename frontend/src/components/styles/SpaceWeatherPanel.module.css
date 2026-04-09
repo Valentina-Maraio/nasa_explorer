@@ -142,3 +142,36 @@
 .cards::-webkit-scrollbar-thumb:hover {
   background: rgba(216, 220, 226, 0.62);
 }
+
+.moonLoader {
+  min-height: 60px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.moonSvg {
+  width: 38px;
+  height: 38px;
+  animation: moonSpin 2.4s linear infinite;
+  transform-origin: 50% 50%;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.moonLoaderText {
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: rgba(216, 220, 226, 0.72);
+}
+
+@keyframes moonSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

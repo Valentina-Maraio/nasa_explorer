@@ -9,7 +9,7 @@ function CommandHeader({ tabs, activeTab, onTabChange, gravityEnabled, onGravity
           <h2 className={`panel-title ${styles.pageTitle}`}>ARES EXPLORER V2.4</h2>
           <CommandTabs tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
           {gravityEnabled ? (
-            <button type="button" className={`${styles.nominalBadge} ${styles.gravityButton}`} onClick={onGravityRestore}>GRAVITY</button>
+            <button type="button" className={`${styles.nominalBadge} ${styles.gravityButton}`} onClick={onGravityRestore}>RESTORE GRAVITY</button>
           ) : (
             <div className={styles.nominalBadge}>● SYSTEM NOMINAL</div>
           )}

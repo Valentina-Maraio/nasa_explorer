@@ -1,13 +1,13 @@
 export const TABS = [
-  { id: 'apod', label: 'APOD' },
   { id: 'nasa-media', label: 'NASA MEDIA' },
   { id: 'live', label: 'LIVE' },
+  { id: 'neo', label: 'NEO' },
 ];
 
 export const TAB_ROUTES = {
-  apod: '/apod',
   'nasa-media': '/nasa-media',
   live: '/live',
+  neo: '/neo',
 };
 
 export const TAB_ROUTE_CONFIG = TABS.map((tab) => ({
@@ -16,9 +16,9 @@ export const TAB_ROUTE_CONFIG = TABS.map((tab) => ({
 }));
 
 export function resolveInitialTab(tabId) {
-  return TABS.some((tab) => tab.id === tabId) ? tabId : 'apod';
+  return TABS.some((tab) => tab.id === tabId) ? tabId : 'nasa-media';
 }
 
 export function getRouteForTab(tabId) {
-  return TAB_ROUTES[tabId] || '/apod';
+  return TAB_ROUTES[tabId] || '/media';
 }
