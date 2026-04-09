@@ -1,13 +1,11 @@
 export const TABS = [
   { id: 'nasa-media', label: 'NASA MEDIA' },
   { id: 'live', label: 'LIVE' },
-  { id: 'neo', label: 'NEO' },
 ];
 
 export const TAB_ROUTES = {
   'nasa-media': '/nasa-media',
   live: '/live',
-  neo: '/neo',
 };
 
 export const TAB_ROUTE_CONFIG = TABS.map((tab) => ({

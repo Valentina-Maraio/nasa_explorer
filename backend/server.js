@@ -6,8 +6,6 @@ require('dotenv').config();
 const apodRoutes = require('./routes/apodRoutes');
 const epicRoutes = require('./routes/epicRoutes');
 const imageRoutes = require('./routes/imageRoutes');
-const marsRoutes = require('./routes/marsRoutes');
-const neoRoutes = require('./routes/neoRoutes');
 const weatherRoutes = require('./routes/weatherRoutes');
 const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
@@ -132,8 +130,6 @@ app.get('/health', (req, res) => {
 app.use('/api/apod', apodRoutes);
 app.use('/api/epic', epicRoutes);
 app.use('/api/images', imageRoutes);
-app.use('/api/mars', marsRoutes);
-app.use('/api/neo', neoRoutes);
 app.use('/api/weather', weatherRoutes);
 
 app.use((req, res, next) => {

@@ -2,9 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEpic } from '../../hooks/useEpic.js';
 import { useImageSearch } from '../../hooks/useImageSearch.js';
-import { useMarsManifest } from '../../hooks/useMarsManifest.js';
-import { useNeo } from '../../hooks/useNeo.js';
-import { useNeoRange } from '../../hooks/useNeoRange.js';
 import { useSpaceWeather } from '../../hooks/useSpaceWeather.js';
 import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
 import CommandHeader from '../../components/CommandHeader.jsx';
@@ -20,9 +17,8 @@ import {
   useAnimationSequence,
   useTriggerAnimation,
 } from '../../animation/index.js';
-import NeoPanel from '../../components/NeoPanel.jsx';
 import { TABS, getRouteForTab, resolveInitialTab } from '../config/tabs.js'
-import { formatCountdown, formatNumber } from '../../utils/formatters.js';
+import { formatNumber } from '../../utils/formatters.js';
 import styles from './style/AresCommandPage.module.css';
 import roverImage from '../../assets/cat_start.gif';
 import roverStopImage from '../../assets/cat_stop.png';
@@ -38,7 +34,6 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
   const today = new Date().toISOString().split('T')[0];
   const resolvedTab = resolveInitialTab(tab || initialTab);
   const [activeTab, setActiveTab] = useState(resolvedTab);
-  const [now, setNow] = useState(Date.now());
   const [dangerLocked, setDangerLocked] = useState(false);
   const [isTriggeredFloating, setIsTriggeredFloating] = useState(false);
   const [warningVisible, setWarningVisible] = useState(false);
@@ -59,19 +54,6 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
   } = useAnimationLayout({ roverRef, buttonRef, motionVisible });
 
   const { data: epic, loading: epicLoading, error: epicError, fetchEpic } = useEpic(today);
-  const { data: neo, loading: neoLoading, error: neoError, fetchNeo } = useNeo(today);
-  const {
-    data: neoRangeData,
-    loading: neoRangeLoading,
-    error: neoRangeError,
-    retry: retryNeoRange,
-  } = useNeoRange(7);
-  const {
-    data: manifest,
-    loading: marsLoading,
-    error: marsError,
-    fetchManifest,
-  } = useMarsManifest('curiosity');
   const {
     query: mediaQuery,
     results: mediaResults,
@@ -103,11 +85,6 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
     active: activeTab === 'live',
     date: today,
   });
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     setActiveTab(resolveInitialTab(tab || initialTab));
@@ -154,12 +131,7 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
     }
   }, [loadMediaAsset, mediaResults, selectedMediaAsset]);
 
-  const missionLog = useMemo(() => neo?.objects || [], [neo]);
 
-  const visibleMissionLog = useMemo(
-    () => missionLog.slice(0, 6),
-    [missionLog],
-  );
 
   const selectedMediaItem = useMemo(
     () => mediaResults.find((item) => item.nasa_id === selectedMediaAsset) || null,
@@ -176,14 +148,8 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
     [mediaAssetFiles],
   );
 
-  const countdown = neo?.nextApproachTimestamp
-    ? formatCountdown(neo.nextApproachTimestamp - now)
-    : '00:00:00';
-
   const retryAll = () => {
     fetchEpic(today);
-    fetchNeo(today);
-    fetchManifest('curiosity');
   };
 
   const handleMediaSelect = (nasaId) => {
@@ -232,28 +198,14 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
 
       <div className={styles.commandGrid}>
         <TelemetryColumn
-          countdown={countdown}
-          neo={neo}
-          neoLoading={neoLoading}
-          manifest={manifest}
-          marsLoading={marsLoading}
           formatNumber={formatNumber}
         />
 
         <section className={styles.centerColumn}>
-          {activeTab === 'neo'
-            ? (
-              <NeoPanel
-                data={neoRangeData}
-                loading={neoRangeLoading}
-                error={neoRangeError}
-                retry={retryNeoRange}
-              />
-            )
-            : activeTab === 'live'
-              ? <LivePanel />
-              : activeTab === 'nasa-media'
-                ? (
+          {activeTab === 'live'
+            ? <LivePanel />
+            : activeTab === 'nasa-media'
+              ? (
                   <MediaReconPanel
                     mediaQuery={mediaQuery}
                     mediaResults={mediaResults}
@@ -288,13 +240,6 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
             selectedMediaItem={selectedMediaItem}
             mediaPreviewVideo={mediaPreviewVideo}
             mediaPreviewImage={mediaPreviewImage}
-            neoError={neoError}
-            marsError={marsError}
-            neoLoading={neoLoading}
-            neo={neo}
-            visibleMissionLog={visibleMissionLog}
-            fetchNeo={fetchNeo}
-            fetchManifest={fetchManifest}
             formatNumber={formatNumber}
             today={today}
             spaceWeather={{

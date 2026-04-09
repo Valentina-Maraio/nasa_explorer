@@ -49,41 +49,7 @@ async function fetchApod(date) {
   }
 }
 
-async function fetchNeoFeed(date) {
-  const apiKey = getApiKey();
 
-  try {
-    const response = await client.get('https://api.nasa.gov/neo/rest/v1/feed', {
-      params: {
-        api_key: apiKey,
-        start_date: date,
-        end_date: date,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    throw mapAxiosError(error, 'Failed to fetch near-earth objects');
-  }
-}
-
-async function fetchNeoRange(startDate, endDate) {
-  const apiKey = getApiKey();
-
-  try {
-    const response = await client.get('https://api.nasa.gov/neo/rest/v1/feed', {
-      params: {
-        api_key: apiKey,
-        start_date: startDate,
-        end_date: endDate,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    throw mapAxiosError(error, 'Failed to fetch near-earth objects range');
-  }
-}
 
 async function fetchEpicNatural(date) {
   const apiKey = getApiKey();
@@ -101,21 +67,7 @@ async function fetchEpicNatural(date) {
   }
 }
 
-async function fetchMarsManifest(rover = 'curiosity') {
-  const apiKey = getApiKey();
 
-  try {
-    const response = await client.get(`https://api.nasa.gov/mars-photos/api/v1/manifests/${encodeURIComponent(rover)}`, {
-      params: {
-        api_key: apiKey,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    throw mapAxiosError(error, 'Failed to fetch Mars rover manifest');
-  }
-}
 
 async function fetchMarsWeather(date) {
   const apiKey = getApiKey();
@@ -230,10 +182,7 @@ async function fetchMetadata(nasaId) {
 
 module.exports = {
   fetchApod,
-  fetchNeoFeed,
-  fetchNeoRange,
   fetchEpicNatural,
-  fetchMarsManifest,
   fetchMarsWeather,
   fetchMoonWeatherProxy,
   searchImages,
