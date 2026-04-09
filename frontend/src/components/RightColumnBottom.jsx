@@ -4,10 +4,6 @@ import styles from './styles/RightColumnBottom.module.css';
 function RightColumnBottom({
   activeTab,
   selectedMediaItem,
-  mediaPreviewVideo,
-  mediaPreviewImage,
-  formatNumber,
-  today,
   spaceWeather,
 }) {
   if (activeTab === 'nasa-media') {

@@ -99,7 +99,6 @@ function SolarFlareTimeline({ events }) {
         <span className={styles.badge}>{events.length} TOTAL</span>
       </div>
 
-      {/* Time-series graph */}
       {chartData.length > 0 && (
         <div className={styles.graphContainer}>
           <ResponsiveContainer width="100%" height={120}>
@@ -137,7 +136,6 @@ function SolarFlareTimeline({ events }) {
         </div>
       )}
 
-      {/* Event list */}
       <div className={styles.timeline}>
         {displayEvents.length === 0 && (
           <div className={styles.noData}>NO FLARE EVENTS IN RANGE</div>

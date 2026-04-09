@@ -4,7 +4,6 @@ import { useEpic } from '../../hooks/useEpic.js';
 import { useImageSearch } from '../../hooks/useImageSearch.js';
 import { useSpaceWeather } from '../../hooks/useSpaceWeather.js';
 import { useSolarFlares } from '../../hooks/useSolarFlares.js';
-import { ErrorMessage } from '../../ui/ErrorMessage.jsx';
 import CommandHeader from '../../components/CommandHeader.jsx';
 import MediaReconPanel from '../../components/MediaReconPanel.jsx';
 import LivePanel from '../../components/LivePanel.jsx';
@@ -55,7 +54,6 @@ function AresCommandPage({ initialTab = 'nasa-media' }) {
     calculateAnimationLayout,
   } = useAnimationLayout({ roverRef, buttonRef, motionVisible });
 
-  const { data: epic, loading: epicLoading, error: epicError, fetchEpic } = useEpic(today);
   const {
     query: mediaQuery,
     results: mediaResults,

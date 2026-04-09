@@ -9,7 +9,7 @@ function SolarMetrics({ solarFlares }) {
 
   return (
     <section className={`dashboard-panel ${styles.panel}`}>
-      <div className={styles.panelHeading}>I'M HERE</div>
+      <div className={styles.panelHeading}>SOLAR METRICS</div>
       <div className={styles.content}>
         {events.length > 0 && (
           <>

@@ -6,13 +6,11 @@ function VisualPanel({
   activeTab,
   apod,
   apodLoading,
-  apodError,
   epic,
   neo,
   manifest,
   today,
   primaryFeed,
-  fetchApod,
   formatNumber,
 }) {
   const [isApodDialogOpen, setIsApodDialogOpen] = useState(false);
