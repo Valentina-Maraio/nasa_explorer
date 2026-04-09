@@ -16,11 +16,57 @@ const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+function normalizeOrigin(value) {
+  return String(value || '').trim().replace(/\/+$/, '').toLowerCase();
+}
+
+function parseAllowedOrigins(value) {
+  return String(value || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
+function matchesOriginRule(origin, rule) {
+  const normalizedOrigin = normalizeOrigin(origin);
+  const normalizedRule = normalizeOrigin(rule);
+
+  if (normalizedRule === '*') {
+    return true;
+  }
+
+  if (normalizedRule === normalizedOrigin) {
+    return true;
+  }
+
+  if (normalizedRule.startsWith('*.')) {
+    try {
+      const hostname = new URL(origin).hostname.toLowerCase();
+      return hostname.endsWith(normalizedRule.slice(1));
+    } catch {
+      return false;
+    }
+  }
+
+  const wildcardProtocolRule = normalizedRule.match(/^(https?):\/\/\*\.(.+)$/);
+  if (wildcardProtocolRule) {
+    try {
+      const [, protocol, suffix] = wildcardProtocolRule;
+      const parsedOrigin = new URL(origin);
+      return parsedOrigin.protocol === `${protocol}:`
+        && parsedOrigin.hostname.toLowerCase().endsWith(`.${suffix}`);
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+const allowedOrigins = parseAllowedOrigins(process.env.ALLOWED_ORIGINS);
+const allowAllOrigins = process.env.CORS_ALLOW_ALL === 'true' || allowedOrigins.includes('*');
 
 const corsOptions = {
   origin(origin, callback) {
@@ -29,24 +75,44 @@ const corsOptions = {
       return;
     }
 
-    if (process.env.NODE_ENV !== 'production' && allowedOrigins.length === 0) {
+    if (allowAllOrigins) {
       callback(null, true);
       return;
     }
 
-    if (allowedOrigins.includes(origin)) {
+    if (!isProduction && allowedOrigins.length === 0) {
+      callback(null, true);
+      return;
+    }
+
+    if (allowedOrigins.some((rule) => matchesOriginRule(origin, rule))) {
       callback(null, true);
       return;
     }
 
     callback(new AppError('CORS blocked for this origin', 403, 'CORS_BLOCKED', true));
   },
-  methods: ['GET'],
+  methods: ['GET', 'OPTIONS'],
 };
+
+if (allowAllOrigins) {
+  logger.warn('CORS allow-all mode enabled via CORS_ALLOW_ALL/ALLOWED_ORIGINS=*');
+} else if (isProduction && allowedOrigins.length === 0) {
+  logger.warn('ALLOWED_ORIGINS is empty in production; browser calls will be blocked by CORS');
+} else {
+  logger.info('CORS configured', {
+    mode: 'allowlist',
+    allowedOrigins,
+  });
+}
+
+if (!process.env.NASA_API_KEY) {
+  logger.warn('NASA_API_KEY is missing; APOD/NEO/EPIC/Mars/Weather endpoints will fail');
+}
 
 app.set('trust proxy', 1);
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '1mb' }));
 app.use(rateLimiter);
 
@@ -56,6 +122,10 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     apiKeyConfigured: Boolean(process.env.NASA_API_KEY),
+    cors: {
+      mode: allowAllOrigins ? 'allow-all' : 'allowlist',
+      allowedOriginsCount: allowedOrigins.length,
+    },
   });
 });
 
