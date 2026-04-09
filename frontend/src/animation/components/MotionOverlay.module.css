@@ -19,7 +19,7 @@
   position: absolute;
   display: block;
   user-select: none;
-  filter: drop-shadow(0 0 8px rgba(216, 220, 226, 0.2));
+  border: none;
 }
 
 .roverMotionImage {
@@ -27,6 +27,7 @@
   height: auto;
   transition-property: left;
   transition-timing-function: linear;
+  box-shadow: none;
 }
 
 .buttonMotionImage {
@@ -34,4 +35,5 @@
   height: auto;
   transition-property: bottom;
   transition-timing-function: ease-out;
+  box-shadow: none;
 }

@@ -61,6 +61,24 @@ async function fetchNeoFeed(date) {
   }
 }
 
+async function fetchNeoRange(startDate, endDate) {
+  const apiKey = getApiKey();
+
+  try {
+    const response = await client.get('https://api.nasa.gov/neo/rest/v1/feed', {
+      params: {
+        api_key: apiKey,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw mapAxiosError(error, 'Failed to fetch near-earth objects range');
+  }
+}
+
 async function fetchEpicNatural(date) {
   const apiKey = getApiKey();
 
@@ -207,6 +225,7 @@ async function fetchMetadata(nasaId) {
 module.exports = {
   fetchApod,
   fetchNeoFeed,
+  fetchNeoRange,
   fetchEpicNatural,
   fetchMarsManifest,
   fetchMarsWeather,

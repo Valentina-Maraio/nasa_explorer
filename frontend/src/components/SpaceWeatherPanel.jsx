@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { LoadingState } from '../ui/LoadingState';
 import MoonWeatherRadar from './MoonWeatherRadar';
+import moonSvg from '../assets/moon.svg';
 import styles from './styles/SpaceWeatherPanel.module.css';
 
 function cToF(value) {
@@ -74,11 +75,13 @@ function MarsCard({ units, data, loading, error, fromFallback, onRetry }) {
 
 function MoonCard({ units, data, loading, error, fromFallback, onRetry }) {
   if (loading && !data) {
-    return <LoadingState message="▸ SYNCING LUNAR PROXY..." minHeight="120px" />;
+    return (
+      <div className={styles.moonLoader}>
+        <img className={styles.moonSvg} src={moonSvg} alt="" aria-hidden="true" />
+        <div className={styles.moonLoaderText}>SYNCING LUNAR PROXY...</div>
+      </div>
+    );
   }
-
-  const proxyTemp = units === 'imperial' ? cToF(data?.proxyMetrics?.proxyTempC) : data?.proxyMetrics?.proxyTempC;
-  const tempUnit = units === 'imperial' ? 'F (proxy)' : 'C (proxy)';
 
   return (
     <div className={styles.card}>
@@ -87,10 +90,8 @@ function MoonCard({ units, data, loading, error, fromFallback, onRetry }) {
         <span className={styles.status}>{data?.status === 'ok' ? 'PROXY ONLINE' : 'UNAVAILABLE'}</span>
       </div>
       <div className={styles.readoutGrid}>
-        <div><span>PROXY TEMP</span><strong>{formatValue(proxyTemp)} {tempUnit}</strong></div>
         <div><span>LUNAR DIST</span><strong>{formatValue(data?.proxyMetrics?.lunarDistanceAu, 3)} AU</strong></div>
         <div><span>SOLAR DIST</span><strong>{formatValue(data?.proxyMetrics?.sunDistanceAu, 3)} AU</strong></div>
-        <div><span>TIMESTAMP</span><strong>{data?.latest?.timestamp || '--'}</strong></div>
       </div>
       {fromFallback ? <div className={styles.fallbackTag}>FALLBACK CACHE ACTIVE</div> : null}
       {error ? <div className={styles.errorLine}>LUNAR LINK DEGRADED · <button className={styles.retryButton} type="button" onClick={onRetry}>RETRY</button></div> : null}

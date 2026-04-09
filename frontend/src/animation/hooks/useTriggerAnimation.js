@@ -15,6 +15,7 @@ export function useTriggerAnimation({
   setDangerLocked,
   setIsTriggeredFloating,
   setWarningVisible,
+  setRoverPaused,
   setButtonPressed,
   setMotionVisible,
   setRoverTransitionMs,
@@ -36,6 +37,7 @@ export function useTriggerAnimation({
     setIsTriggeredFloating(false);
     setWarningVisible(false);
     setButtonPressed(false);
+    setRoverPaused(false);
     setMotionVisible(false);
     setRoverTransitionMs(0);
     setButtonTransitionMs(0);
@@ -63,7 +65,9 @@ export function useTriggerAnimation({
         rafIdsRef.current.push(rafA);
 
         const pressTimer = window.setTimeout(() => {
+          setRoverPaused(true);
           const delayTimer = window.setTimeout(() => {
+            setRoverPaused(false);
             setRoverTransitionMs(PRESS_DURATION_MS);
             setAnimationLayout((layout) => ({
               ...layout,
@@ -79,6 +83,7 @@ export function useTriggerAnimation({
                 setButtonPressed(false);
                 setRoverTransitionMs(0);
                 setButtonTransitionMs(0);
+                setRoverPaused(false);
               }, FLOAT_TRIGGER_DELAY_MS);
               timeoutIdsRef.current.push(floatingStartTimer);
             }, PRESS_DURATION_MS);
@@ -102,6 +107,7 @@ export function useTriggerAnimation({
     setDangerLocked,
     setIsTriggeredFloating,
     setMotionVisible,
+    setRoverPaused,
     setRoverTransitionMs,
     setWarningVisible,
     timeoutIdsRef,

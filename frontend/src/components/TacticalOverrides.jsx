@@ -4,9 +4,6 @@ import styles from './styles/TacticalOverrides.module.css';
 function TacticalOverrides({
   onDangerTrigger,
   dangerDisabled,
-  selectedApodDate,
-  setSelectedApodDate,
-  handleApodSubmit,
   today,
   isNasaMediaPage,
 }) {
@@ -23,27 +20,6 @@ function TacticalOverrides({
           DANGER
         </button>
       </div>
-
-      {isNasaMediaPage ? null : (
-        <div className={styles.toggleList}>
-          <form onSubmit={handleApodSubmit} className={styles.apodForm}>
-            <div className={styles.apodFormLabel}>APOD DATE</div>
-            <div className={styles.apodFormRow}>
-              <input
-                type="date"
-                value={selectedApodDate}
-                max={today}
-                onChange={(event) => setSelectedApodDate(event.target.value)}
-              />
-            </div>
-            <div className={styles.apodFormRow}>
-              <Button className={styles.apodFormButton}>
-                ▶ FETCH APOD
-              </Button>
-            </div>
-          </form>
-        </div>
-      )}
     </section>
   );
 }

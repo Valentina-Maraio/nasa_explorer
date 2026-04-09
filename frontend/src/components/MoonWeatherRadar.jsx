@@ -110,7 +110,6 @@ function MoonWeatherRadar({ history = [], units, loading, error, fromFallback, o
 
   const tempPolygon = buildPolygon(normalizedTemp, radius, center, center);
   const lunarPolygon = buildPolygon(normalizedLunar, radius, center, center);
-  const solarPolygon = buildPolygon(normalizedSolar, radius, center, center);
 
   return (
     <div className={styles.graphCard}>
@@ -148,7 +147,6 @@ function MoonWeatherRadar({ history = [], units, loading, error, fromFallback, o
 
           <polygon points={tempPolygon} className={styles.tempPolygon} />
           <polygon points={lunarPolygon} className={styles.lunarPolygon} />
-          <polygon points={solarPolygon} className={styles.solarPolygon} />
           <circle cx={center} cy={center} r="2.8" className={styles.centerDot} />
         </svg>
       </div>
@@ -156,12 +154,10 @@ function MoonWeatherRadar({ history = [], units, loading, error, fromFallback, o
       <div className={styles.legend}>
         <span><i className={styles.legendTemp} />PROXY TEMP</span>
         <span><i className={styles.legendLunar} />LUNAR DIST</span>
-        <span><i className={styles.legendSolar} />SOLAR DIST</span>
       </div>
 
       <div className={styles.metricsRow}>
         <div>NOW TEMP {formatMetric(tempSeries[tempSeries.length - 1], 1)} {units === 'imperial' ? 'F' : 'C'}</div>
-        <div>NOW LUNAR {formatMetric(lunarSeries[lunarSeries.length - 1], 3)} AU</div>
       </div>
 
       {fromFallback ? <div className={styles.fallbackTag}>FALLBACK CACHE ACTIVE</div> : null}
