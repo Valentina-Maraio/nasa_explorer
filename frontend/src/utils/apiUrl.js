@@ -1,5 +1,4 @@
-const runtimeBaseUrl = globalThis.__APP_API_BASE_URL__ || process.env.VITE_API_BASE_URL || '';
-const rawBaseUrl = String(runtimeBaseUrl).trim();
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
 const baseUrl = rawBaseUrl.replace(/\/+$/, '');
 
 export function buildApiUrl(path) {
