@@ -1,4 +1,4 @@
-import { LoadingState } from '../ui/LoadingState';
+import { CelestialLoader } from '../ui/CelestialLoader';
 import styles from './styles/MoonWeatherRadar.module.css';
 
 function toDisplayTemp(value, units) {
@@ -78,10 +78,7 @@ function MoonWeatherRadar({ history = [], units, loading, error, fromFallback, o
 
   if (loading && points.length === 0) {
     return (
-      <div className={styles.graphCard}>
-        <div className={styles.graphHeading}>MOON RADAR</div>
-        <LoadingState message="▸ BUILDING LUNAR RADAR..." minHeight="170px" />
-      </div>
+      <CelestialLoader kind="moon" message="▸ BUILDING LUNAR RADAR..." minHeight="92px" />
     );
   }
 

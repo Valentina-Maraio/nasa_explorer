@@ -5,6 +5,11 @@
   gap: 10px;
 }
 
+.solarLoadingState {
+  min-height: calc(100vh - 140px);
+  justify-content: center;
+}
+
 .panelHeader {
   display: flex;
   align-items: center;

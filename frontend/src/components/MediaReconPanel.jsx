@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
+import { CelestialLoader } from '../ui/CelestialLoader';
 import { ErrorMessage } from '../ui/ErrorMessage';
 import { LoadingState } from '../ui/LoadingState';
 import { Pagination } from '../ui/Pagination';
@@ -79,7 +80,7 @@ function MediaReconPanel({
         {mediaError ? <ErrorMessage message={mediaError} onRetry={() => searchMedia(mediaQuery, mediaCurrentPage)} /> : null}
 
         {mediaLoading && mediaResults.length === 0 ? (
-          <LoadingState message="▸ SWEEPING NASA MEDIA ARCHIVES..." minHeight="180px" />
+          <CelestialLoader kind="satellite" message="▸ SWEEPING NASA MEDIA ARCHIVES..." minHeight="180px" />
         ) : (
           <div className={styles.resultsRegion}>
             <div className={styles.mediaReconGrid}>
@@ -143,7 +144,7 @@ function MediaReconPanel({
                     playsInline
                   />
                 ) : (
-                  <LoadingState message="▸ PREPARING VIDEO PREVIEW..." minHeight="220px" />
+                  <CelestialLoader kind="satellite" message="▸ SWEEPING MEDIA ARCHIVE..." minHeight="180px" />
                 )
               ) : (
                 <img
