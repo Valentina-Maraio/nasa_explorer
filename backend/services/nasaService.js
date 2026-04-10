@@ -6,7 +6,7 @@ const client = axios.create({ timeout: 15000 });
 function getApiKey() {
   const apiKey = process.env.NASA_API_KEY;
   if (!apiKey) {
-    throw new AppError('NASA_API_KEY is not configured on server', 500, 'MISSING_NASA_API_KEY', false);
+    throw new AppError('NASA_API_KEY is not configured on server', 500, 'MISSING_NASA_API_KEY', true);
   }
 
   return apiKey;
@@ -14,6 +14,12 @@ function getApiKey() {
 
 function mapAxiosError(error, fallbackMessage) {
   if (error.response) {
+    if (error.response.status === 401 || error.response.status === 403) {
+      return new AppError('NASA API key is invalid or unauthorized', 502, 'NASA_AUTH_ERROR', true, {
+        upstreamStatus: error.response.status,
+      });
+    }
+
     return new AppError(fallbackMessage, 502, 'NASA_UPSTREAM_ERROR', true, {
       upstreamStatus: error.response.status,
     });
