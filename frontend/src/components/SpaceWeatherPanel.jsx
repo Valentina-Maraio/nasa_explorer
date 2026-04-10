@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
-import { LoadingState } from '../ui/LoadingState';
+import { CelestialLoader } from '../ui/CelestialLoader';
 import MoonWeatherRadar from './MoonWeatherRadar';
-import moonSvg from '../assets/moon.svg';
 import styles from './styles/SpaceWeatherPanel.module.css';
 
 function cToF(value) {
@@ -38,7 +37,7 @@ function formatValue(value, digits = 1) {
 
 function MarsCard({ units, data, loading, error, fromFallback, onRetry }) {
   if (loading && !data) {
-    return <LoadingState message="▸ SYNCING MARS WEATHER..." minHeight="120px" />;
+    return <CelestialLoader kind="mars" message="▸ SYNCING MARS WEATHER..." minHeight="120px" />;
   }
 
   const latest = data?.latest;
@@ -73,13 +72,10 @@ function MarsCard({ units, data, loading, error, fromFallback, onRetry }) {
   );
 }
 
-function MoonCard({ units, data, loading, error, fromFallback, onRetry }) {
+function MoonCard({ data, loading, error, fromFallback, onRetry }) {
   if (loading && !data) {
     return (
-      <div className={styles.moonLoader}>
-        <img className={styles.moonSvg} src={moonSvg} alt="" aria-hidden="true" />
-        <div className={styles.moonLoaderText}>SYNCING LUNAR PROXY...</div>
-      </div>
+      <CelestialLoader kind="moon" message="SYNCING LUNAR PROXY..." minHeight="76px" />
     );
   }
 
@@ -138,7 +134,6 @@ function SpaceWeatherPanel({
           onRetry={retryMars}
         />
         <MoonCard
-          units={units}
           data={moon}
           loading={moonLoading}
           error={moonError}

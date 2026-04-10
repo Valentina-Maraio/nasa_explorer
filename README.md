@@ -2,13 +2,23 @@
 
 NASA Explorer is a full-stack space data dashboard built on NASA's public APIs. It combines a React frontend interface with an NodeJS / Express backend that aggregates, validates, and normalizes data for astronomy media, near-Earth object tracking, Earth imagery, and planetary telemetry.
 
+Try the application here: [NasaExplorer](https://nasa-explorer-ndnd.vercel.app/)
+
+## App Screens Preview
+![Artemis II Live](./frontend//src//assets/nasa_live_panel.png)
+
+<video src="./frontend//src//assets//solar_activity.mp4" width="600" controls>
+  Your browser does not support the video tag.
+</video>
+
 ## Overview
 
 The application is organized around three primary user views:
 
 - `NASA MEDIA`: Search NASA's media library and inspect asset metadata.
-- `LIVE`: Surface Mars weather telemetry, lunar proxy telemetry, and live mission panels.
-- `NEO`: Monitor near-Earth objects with risk, velocity, distance, and diameter visualizations.
+- `LIVE`: Follow live the adventure of the four astronauts on the Artemis II.
+- `SOLAR`: Monitor solar flares anch check the active region activity.
+- `DANCGER`: Are you adventerous enough to click that button?
 
 The backend acts as a service layer between the frontend and NASA APIs. It centralizes request validation, rate limiting, security middleware, error handling, and data transformation so the frontend can render consistent datasets.
 
@@ -30,13 +40,6 @@ The backend acts as a service layer between the frontend and NASA APIs. It centr
 - `CORS`
 - `express-rate-limit`
 - `express-validator`
-
-### Local development flow
-
-- The frontend runs on `http://localhost:5173` by default.
-- The backend runs on `http://localhost:3001` by default.
-- Vite proxies `/api` requests to the backend during local development.
-- In deployed environments, the frontend can use `VITE_API_BASE_URL` to target a remote API.
 
 ## Requirements
 
@@ -81,7 +84,7 @@ VITE_API_BASE_URL=http://localhost:3001
 
 ```bash
 cd backend
-npm run dev
+node server.js
 ```
 
 ### 4. Start the frontend
@@ -92,38 +95,6 @@ npm run dev
 ```
 
 Then open `http://localhost:5173` in your browser.
-
-## Available Scripts
-
-### Backend
-
-- `npm run dev`: Start the API server with `nodemon`.
-- `npm start`: Start the API server with Node.
-
-### Frontend
-
-- `npm run dev`: Start the Vite development server.
-- `npm run build`: Create a production build in `frontend/dist`.
-- `npm run preview`: Preview the production build locally.
-- `npm run lint`: Run ESLint.
-
-## Troubleshooting
-
-### NASA data requests fail
-
-- Confirm `NASA_API_KEY` is present in `backend/.env`.
-- Verify the backend is running on the expected port.
-- Check whether NASA upstream services are rate-limiting or unavailable.
-
-### CORS errors in production
-
-- Ensure the frontend origin is included in `ALLOWED_ORIGINS`.
-- Separate multiple origins with commas and avoid trailing spaces where possible.
-
-### Frontend cannot reach the API
-
-- In local development, verify the backend is running on `http://localhost:3001`.
-- In remote environments, set `VITE_API_BASE_URL` to the deployed backend URL.
 
 ## Deployment
 

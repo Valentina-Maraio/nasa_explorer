@@ -1,4 +1,4 @@
-import { LoadingState } from '../ui/LoadingState';
+import { CelestialLoader } from '../ui/CelestialLoader';
 import SolarFlareTimeline from './SolarFlareTimeline';
 import FlareClassChart from './FlareClassChart';
 import SunPhoto from './SunPhoto';
@@ -13,11 +13,8 @@ function SolarFlarePanel({
 }) {
   if (loading && !data) {
     return (
-      <section className={`dashboard-panel ${styles.solarPanel}`}>
-        <div className={styles.panelHeader}>
-          <div className={styles.panelHeading}>SOLAR ACTIVITY</div>
-        </div>
-        <LoadingState message="▸ SYNCING SOLAR FLARE DATA..." minHeight="300px" />
+      <section className={`${styles.solarPanel} ${styles.solarLoadingState}`}>
+        <CelestialLoader kind="sun" message="▸ SYNCING SOLAR FLARE DATA..." minHeight="60vh" size="large" />
       </section>
     );
   }
