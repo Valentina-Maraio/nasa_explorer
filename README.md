@@ -7,9 +7,7 @@ Try the application here: [NasaExplorer](https://nasa-explorer-ndnd.vercel.app/)
 ## App Screens Preview
 ![Artemis II Live](./frontend//src//assets/nasa_live_panel.png)
 
-<video src="./frontend//src//assets//solar_activity.mp4" width="600" controls>
-  Your browser does not support the video tag.
-</video>
+![Solar Activity](./frontend//src//assets//solar_activity.mp4)
 
 ## Overview
 

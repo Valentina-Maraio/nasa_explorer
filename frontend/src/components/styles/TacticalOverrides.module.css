@@ -39,6 +39,8 @@
 .actionLinkDanger {
   border-color: rgba(255, 97, 115, 0.35);
   color: #ff7f8c;
+  justify-content: center;
+  text-align: center;
 }
 
 .actionLinkWarning {
