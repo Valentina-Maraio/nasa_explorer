@@ -1,7 +1,7 @@
 const axios = require('axios');
 const AppError = require('../utils/AppError');
 
-const client = axios.create({ timeout: 15000 });
+const client = axios.create();
 
 function getApiKey() {
   const apiKey = process.env.NASA_API_KEY;
