@@ -7,7 +7,9 @@ Try the application here: [NasaExplorer](https://nasa-explorer-ndnd.vercel.app/)
 ## App Screens Preview
 ![Artemis II Live](./frontend//src//assets/nasa_live_panel.png)
 
-![Solar Flares Panel](./frontend/src//assets/solar_activity.png)(https://github.com/user-attachments/assets/82ec0b47-310f-4be8-89f6-cb4d2a0a35bd)
+![Solar Flares Panel](./frontend/src//assets/solar_activity.png)
+
+![Demonstration Video](https://github.com/user-attachments/assets/82ec0b47-310f-4be8-89f6-cb4d2a0a35bd)
 ## Overview
 
 The application is organized around three primary user views:
